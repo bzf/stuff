@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
 
+export function useProject(projectId: string) {
+  const projects = useProjects();
+  return projects.find((project) => project.id === projectId);
+}
+
 export function useProjects() {
   const [projects, setProjects] = useState([]);
 

@@ -16,9 +16,6 @@ async function loadData() {
 function App() {
   const [title, setTitle] = useState("");
 
-  const projects = useProjects();
-  const tasks = useTasks();
-
   return (
     <>
       <PageTitle title="Today" />

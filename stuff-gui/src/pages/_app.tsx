@@ -1,16 +1,25 @@
 import type { AppProps } from "next/app";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useProjects } from "../stuff";
 
 import "../style.css";
 
 export default function MyApp({ Component, pageProps }: AppProps) {
+  const projects = useProjects();
+
   return (
     <div className="flex h-screen w-screen">
-      <div className="bg-gray-100 min-w-[255px] h-full py-4">
-        <section className="w-full px-2 flex flex-col gap-2">
+      <div className="bg-gray-100 min-w-[255px] h-full py-4 px-2 flex flex-col gap-6">
+        <section className="w-full flex flex-col gap-2">
           <AppLink href="/inbox">Inbox</AppLink>
           <AppLink href="/today">Today</AppLink>
+        </section>
+
+        <section className="w-full flex flex-col gap-2">
+          {projects.map((project) => (
+            <AppLink href={`/projects/${project.id}`}>{project.name}</AppLink>
+          ))}
         </section>
       </div>
 
@@ -34,7 +43,7 @@ function AppLink({ href, children }) {
     "font-medium",
   ];
 
-  if (router.pathname === href) {
+  if (router.asPath === href) {
     classes.push("bg-black/10");
   }
 
