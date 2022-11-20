@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
+import { useProjects, useTasks } from "../stuff";
 
 async function loadData() {
   const projects = await invoke("projects");
@@ -13,24 +14,9 @@ async function loadData() {
 
 function App() {
   const [title, setTitle] = useState("");
-  const [data, setData] = useState(null);
 
-  async function addTask() {
-    await invoke("add_task", { title });
-    setTitle("");
-
-    loadData().then(setData);
-  }
-
-  useEffect(() => {
-    loadData().then(setData);
-  }, []);
-
-  if (data === null) {
-    return <div>loading</div>;
-  }
-
-  console.log({ data });
+  const projects = useProjects();
+  const tasks = useTasks();
 
   return (
     <div className="container">
