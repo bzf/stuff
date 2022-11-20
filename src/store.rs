@@ -6,6 +6,7 @@ use std::io::prelude::*;
 use std::path::PathBuf;
 
 use crate::config::Config;
+use crate::project::Project;
 use crate::task::Task;
 
 #[derive(Serialize, Deserialize)]
@@ -18,6 +19,7 @@ struct EventPayload {
 enum Event {
     AddTask { uuid: uuid::Uuid, title: String },
     MarkTaskAsComplete { task_id: uuid::Uuid },
+    CreateProject { uuid: uuid::Uuid, name: String },
 }
 
 pub struct Store {
@@ -49,6 +51,10 @@ impl Store {
         reduce_events_to_tasks(&self.events)
     }
 
+    pub fn projects(&self) -> Vec<Project> {
+        reduce_events_to_projects(&self.events)
+    }
+
     pub fn add_task(&mut self, title: &str) {
         self.push_event(Event::AddTask {
             uuid: uuid::Uuid::new_v4(),
@@ -60,6 +66,13 @@ impl Store {
         self.push_event(Event::MarkTaskAsComplete {
             task_id: task_id.clone(),
         });
+    }
+
+    pub fn create_project(&mut self, name: &str) {
+        self.push_event(Event::CreateProject {
+            uuid: uuid::Uuid::new_v4(),
+            name: name.to_string(),
+        })
     }
 
     fn push_event(&mut self, event: Event) {
@@ -98,8 +111,29 @@ fn reduce_events_to_tasks(event_payloads: &Vec<EventPayload>) -> Vec<Task> {
                     .entry(*task_id)
                     .and_modify(|task| task.set_completed_at(&event_payload.timestamp));
             }
+
+            _ => (),
         }
     }
 
     return tasks.into_values().collect();
+}
+
+fn reduce_events_to_projects(event_payloads: &Vec<EventPayload>) -> Vec<Project> {
+    let mut projects = HashMap::new();
+
+    for event_payload in event_payloads {
+        match &event_payload.event {
+            Event::CreateProject { uuid, name } => {
+                projects.insert(
+                    uuid.clone(),
+                    Project::new(uuid.clone(), name.clone(), event_payload.timestamp),
+                );
+            }
+
+            _ => (),
+        }
+    }
+
+    return projects.into_values().collect();
 }

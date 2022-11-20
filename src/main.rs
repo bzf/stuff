@@ -10,6 +10,7 @@ use crate::config::Config;
 use crate::store::Store;
 
 mod config;
+mod project;
 mod store;
 mod task;
 
@@ -45,6 +46,17 @@ enum Commands {
         #[arg(required = true)]
         task_id: uuid::Uuid,
     },
+
+    /// Create a new project
+    #[command()]
+    CreateProject {
+        #[arg(required = true)]
+        name_parts: Vec<String>,
+    },
+
+    /// Lists all projects
+    #[command()]
+    Projects,
 }
 
 fn main() {
@@ -79,13 +91,7 @@ fn main() {
 
         (Commands::Add { title_parts }, Some(config)) => {
             let mut store = Store::new(&xdg_dirs, &config);
-
-            let task_title: String = title_parts
-                .into_iter()
-                .intersperse(" ".to_string())
-                .collect();
-
-            store.add_task(&task_title)
+            store.add_task(&concat_parts(title_parts));
         }
 
         (Commands::Tasks, Some(config)) => {
@@ -106,6 +112,19 @@ fn main() {
             store.mark_task_as_complete(&task_id);
         }
 
+        (Commands::CreateProject { name_parts }, Some(config)) => {
+            let mut store = Store::new(&xdg_dirs, &config);
+            store.create_project(&concat_parts(name_parts));
+        }
+
+        (Commands::Projects, Some(config)) => {
+            let store = Store::new(&xdg_dirs, &config);
+
+            for project in store.projects() {
+                println!("{} | {}", project.id(), project.name());
+            }
+        }
+
         (_, None) => {
             eprintln!("No configuration file found");
             exit(1);
@@ -118,4 +137,8 @@ fn get_config(xdg_dirs: &xdg::BaseDirectories) -> Option<Config> {
         .find_config_file(CONFIG_FILENAME)
         .and_then(|filepath| File::open(filepath).ok())
         .and_then(|file| serde_yaml::from_reader(file).ok())
+}
+
+fn concat_parts(parts: Vec<String>) -> String {
+    parts.into_iter().intersperse(" ".to_string()).collect()
 }
