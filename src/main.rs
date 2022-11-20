@@ -65,12 +65,12 @@ fn main() {
             }
         },
 
-        (Commands::Add { title_parts }, Some(config)) => {
-            client.store(&config).add_task(&concat_parts(title_parts));
+        (Commands::Add { title_parts }, Some(_)) => {
+            client.store().add_task(&concat_parts(title_parts));
         }
 
-        (Commands::Tasks, Some(config)) => {
-            for task in client.store(&config).tasks() {
+        (Commands::Tasks, Some(_)) => {
+            for task in client.store().tasks() {
                 let done_label = match task.completed_at() {
                     Some(_) => "(done)",
                     None => "",
@@ -80,18 +80,16 @@ fn main() {
             }
         }
 
-        (Commands::Done { task_id }, Some(config)) => {
-            client.store(&config).mark_task_as_complete(&task_id);
+        (Commands::Done { task_id }, Some(_)) => {
+            client.store().mark_task_as_complete(&task_id);
         }
 
-        (Commands::CreateProject { name_parts }, Some(config)) => {
-            client
-                .store(&config)
-                .create_project(&concat_parts(name_parts));
+        (Commands::CreateProject { name_parts }, Some(_)) => {
+            client.store().create_project(&concat_parts(name_parts));
         }
 
-        (Commands::Projects, Some(config)) => {
-            for project in client.store(&config).projects() {
+        (Commands::Projects, Some(_)) => {
+            for project in client.store().projects() {
                 println!("{} | {}", project.id(), project.name());
             }
         }

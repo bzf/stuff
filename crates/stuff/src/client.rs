@@ -43,7 +43,12 @@ impl Client {
             .and_then(|file| serde_yaml::from_reader(file).ok())
     }
 
-    pub fn store(&self, config: &Config) -> Store {
-        Store::new(&self.xdg_dirs, config)
+    pub fn store(&self) -> Store {
+        Store::new(
+            &self.xdg_dirs,
+            &self
+                .config()
+                .expect("Tried to read store without initializing configuration first"),
+        )
     }
 }

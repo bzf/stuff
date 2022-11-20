@@ -1,6 +1,7 @@
 use chrono::prelude::*;
+use serde::Serialize;
 
-#[derive(Clone)]
+#[derive(Clone, Serialize)]
 pub struct Task {
     id: uuid::Uuid,
     title: String,
