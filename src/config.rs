@@ -19,8 +19,4 @@ impl Config {
     pub fn client_id(&self) -> &uuid::Uuid {
         &self.client_id
     }
-
-    pub fn data_directory(&self) -> &Path {
-        &self.data_directory
-    }
 }

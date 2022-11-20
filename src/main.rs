@@ -1,14 +1,10 @@
 #![allow(unstable_name_collisions)]
 
-use clap::{Args, Parser, Subcommand, ValueEnum};
+use clap::{Parser, Subcommand};
 use itertools::Itertools;
-use std::ffi::OsStr;
-use std::ffi::OsString;
 use std::fs::File;
 use std::io::prelude::*;
-use std::path::PathBuf;
 use std::process::exit;
-use xdg::BaseDirectories;
 
 use crate::config::Config;
 use crate::store::Store;
