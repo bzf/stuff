@@ -17,6 +17,7 @@ struct EventPayload {
 #[derive(Serialize, Deserialize)]
 enum Event {
     AddTask { uuid: uuid::Uuid, title: String },
+    MarkTaskAsComplete { task_id: uuid::Uuid },
 }
 
 pub struct Store {
@@ -24,7 +25,6 @@ pub struct Store {
     payload_path: PathBuf,
 
     events: Vec<EventPayload>,
-    tasks: HashMap<uuid::Uuid, Task>,
 }
 
 impl Store {
@@ -41,13 +41,12 @@ impl Store {
             _config: config.clone(),
             payload_path,
 
-            tasks: reduce_events_to_tasks(&events),
             events,
         }
     }
 
     pub fn tasks(&self) -> Vec<Task> {
-        self.tasks.values().into_iter().cloned().collect()
+        reduce_events_to_tasks(&self.events)
     }
 
     pub fn add_task(&mut self, title: &str) {
@@ -55,6 +54,12 @@ impl Store {
             uuid: uuid::Uuid::new_v4(),
             title: title.to_string(),
         })
+    }
+
+    pub fn mark_task_as_complete(&mut self, task_id: &uuid::Uuid) {
+        self.push_event(Event::MarkTaskAsComplete {
+            task_id: task_id.clone(),
+        });
     }
 
     fn push_event(&mut self, event: Event) {
@@ -76,7 +81,7 @@ impl Store {
     }
 }
 
-fn reduce_events_to_tasks(event_payloads: &Vec<EventPayload>) -> HashMap<uuid::Uuid, Task> {
+fn reduce_events_to_tasks(event_payloads: &Vec<EventPayload>) -> Vec<Task> {
     let mut tasks = HashMap::new();
 
     for event_payload in event_payloads {
@@ -87,8 +92,14 @@ fn reduce_events_to_tasks(event_payloads: &Vec<EventPayload>) -> HashMap<uuid::U
                     Task::new(uuid.clone(), title.clone(), event_payload.timestamp),
                 );
             }
+
+            Event::MarkTaskAsComplete { task_id } => {
+                tasks
+                    .entry(*task_id)
+                    .and_modify(|task| task.set_completed_at(&event_payload.timestamp));
+            }
         }
     }
 
-    return tasks;
+    return tasks.into_values().collect();
 }

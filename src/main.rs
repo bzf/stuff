@@ -42,6 +42,13 @@ enum Commands {
     /// Lists all tasks
     #[command()]
     Tasks,
+
+    /// Mark as task as completed
+    #[command()]
+    Done {
+        #[arg(required = true)]
+        task_id: uuid::Uuid,
+    },
 }
 
 fn main() {
@@ -89,8 +96,18 @@ fn main() {
             let store = Store::new(&xdg_dirs, &config);
 
             for task in store.tasks() {
-                println!("{} | {}", task.id(), task.title());
+                let done_label = match task.completed_at() {
+                    Some(_) => "(done)",
+                    None => "",
+                };
+
+                println!("{} | {} {}", task.id(), task.title(), done_label);
             }
+        }
+
+        (Commands::Done { task_id }, Some(config)) => {
+            let mut store = Store::new(&xdg_dirs, &config);
+            store.mark_task_as_complete(&task_id);
         }
 
         (_, None) => {
