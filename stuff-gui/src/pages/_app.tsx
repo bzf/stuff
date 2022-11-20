@@ -10,7 +10,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <div className="flex h-screen w-screen">
-      <div className="bg-gray-100 min-w-[255px] h-full py-4 px-2 flex flex-col gap-6">
+      <div className="bg-gray-50 min-w-[255px] h-full py-4 px-2 flex flex-col gap-6">
         <section className="w-full flex flex-col gap-2">
           <AppLink href="/inbox">Inbox</AppLink>
           <AppLink href="/today">Today</AppLink>
@@ -44,7 +44,7 @@ function AppLink({ href, children }) {
   ];
 
   if (router.asPath === href) {
-    classes.push("bg-black/10");
+    classes.push("bg-black/[6%]");
   }
 
   return (
