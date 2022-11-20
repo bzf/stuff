@@ -4,7 +4,7 @@ use clap::{Parser, Subcommand};
 use itertools::Itertools;
 use std::process::exit;
 
-use stuff::{get_config, initialize_configuration, Store};
+use stuff::Client;
 
 #[derive(Debug, Parser)]
 #[command(name = "stuff")]
@@ -50,10 +50,10 @@ enum Commands {
 }
 
 fn main() {
-    let xdg_dirs = xdg::BaseDirectories::with_prefix("stuff").unwrap();
+    let client = Client::new("stuff");
     let args = Cli::parse();
 
-    match (args.command, get_config(&xdg_dirs)) {
+    match (args.command, client.config()) {
         (Commands::Init, configuration) => match configuration {
             Some(_) => {
                 eprintln!("Configuration already exists");
@@ -61,19 +61,16 @@ fn main() {
             }
 
             None => {
-                initialize_configuration(&xdg_dirs);
+                client.initialize();
             }
         },
 
         (Commands::Add { title_parts }, Some(config)) => {
-            let mut store = Store::new(&xdg_dirs, &config);
-            store.add_task(&concat_parts(title_parts));
+            client.store(&config).add_task(&concat_parts(title_parts));
         }
 
         (Commands::Tasks, Some(config)) => {
-            let store = Store::new(&xdg_dirs, &config);
-
-            for task in store.tasks() {
+            for task in client.store(&config).tasks() {
                 let done_label = match task.completed_at() {
                     Some(_) => "(done)",
                     None => "",
@@ -84,19 +81,17 @@ fn main() {
         }
 
         (Commands::Done { task_id }, Some(config)) => {
-            let mut store = Store::new(&xdg_dirs, &config);
-            store.mark_task_as_complete(&task_id);
+            client.store(&config).mark_task_as_complete(&task_id);
         }
 
         (Commands::CreateProject { name_parts }, Some(config)) => {
-            let mut store = Store::new(&xdg_dirs, &config);
-            store.create_project(&concat_parts(name_parts));
+            client
+                .store(&config)
+                .create_project(&concat_parts(name_parts));
         }
 
         (Commands::Projects, Some(config)) => {
-            let store = Store::new(&xdg_dirs, &config);
-
-            for project in store.projects() {
+            for project in client.store(&config).projects() {
                 println!("{} | {}", project.id(), project.name());
             }
         }

@@ -465,7 +465,6 @@ name = "stuff"
 version = "0.1.0"
 dependencies = [
  "chrono",
- "itertools",
  "serde",
  "serde_json",
  "serde_yaml",
@@ -477,15 +476,10 @@ dependencies = [
 name = "stuff-cli"
 version = "0.1.0"
 dependencies = [
- "chrono",
  "clap",
  "itertools",
- "serde",
- "serde_json",
- "serde_yaml",
  "stuff",
  "uuid",
- "xdg",
 ]
 
 [[package]]
