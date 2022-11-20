@@ -1,4 +1,7 @@
+#![allow(unstable_name_collisions)]
+
 use clap::{Args, Parser, Subcommand, ValueEnum};
+use itertools::Itertools;
 use std::ffi::OsStr;
 use std::ffi::OsString;
 use std::fs::File;
@@ -8,8 +11,10 @@ use std::process::exit;
 use xdg::BaseDirectories;
 
 use crate::config::Config;
+use crate::store::Store;
 
 mod config;
+mod store;
 
 const CONFIG_FILENAME: &'static str = "config.yml";
 
@@ -25,24 +30,28 @@ enum Commands {
     /// Creates an initial configuration
     #[command()]
     Init,
+
+    /// Adds a task
+    #[command(arg_required_else_help = true)]
+    Add {
+        #[arg(required = true)]
+        title_parts: Vec<String>,
+    },
 }
 
 fn main() {
     let xdg_dirs = xdg::BaseDirectories::with_prefix("stuff").unwrap();
     let args = Cli::parse();
 
-    match args.command {
-        Commands::Init => match xdg_dirs.find_config_file(CONFIG_FILENAME) {
+    match (args.command, get_config(&xdg_dirs)) {
+        (Commands::Init, configuration) => match configuration {
             Some(_) => {
                 eprintln!("Configuration already exists");
                 exit(1);
             }
 
             None => {
-                let data_directories = xdg_dirs.get_data_dirs();
-                let data_directory = data_directories
-                    .first()
-                    .expect("Could not get any data directories through xdg");
+                let data_directory = xdg_dirs.get_data_home();
 
                 let initial_configuration = Config::new(data_directory.as_path());
 
@@ -59,5 +68,28 @@ fn main() {
                 .unwrap();
             }
         },
+
+        (Commands::Add { title_parts }, Some(config)) => {
+            let mut store = Store::new(&xdg_dirs, &config);
+
+            let task_title: String = title_parts
+                .into_iter()
+                .intersperse(" ".to_string())
+                .collect();
+
+            store.add_task(&task_title)
+        }
+
+        (_, None) => {
+            eprintln!("No configuration file found");
+            exit(1);
+        }
     }
+}
+
+fn get_config(xdg_dirs: &xdg::BaseDirectories) -> Option<Config> {
+    xdg_dirs
+        .find_config_file(CONFIG_FILENAME)
+        .and_then(|filepath| File::open(filepath).ok())
+        .and_then(|file| serde_yaml::from_reader(file).ok())
 }
