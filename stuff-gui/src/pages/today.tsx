@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
 import { useProjects, useTasks } from "../stuff";
+import PageTitle from "../components/PageTitle";
 
 async function loadData() {
   const projects = await invoke("projects");
@@ -19,8 +20,8 @@ function App() {
   const tasks = useTasks();
 
   return (
-    <div className="container">
-      <h1>Welcome to Tauri!</h1>
+    <>
+      <PageTitle title="Today" />
 
       <div className="row">
         <div>
@@ -30,12 +31,11 @@ function App() {
             onChange={(e) => setTitle(e.currentTarget.value)}
             placeholder="Enter a name..."
           />
-          <button type="button" onClick={() => addTask()}>
-            Add
-          </button>
+
+          <button type="button">Add</button>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

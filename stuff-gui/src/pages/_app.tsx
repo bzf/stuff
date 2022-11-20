@@ -15,7 +15,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
       </div>
 
       <div className="px-8 flex-1 py-4">
-        <div className="max-w-[600px] mx-auto">
+        <div className="max-w-[600px] mx-auto flex flex-col gap-4">
           <Component {...pageProps} />
         </div>
       </div>
