@@ -15,6 +15,7 @@ use crate::store::Store;
 
 mod config;
 mod store;
+mod task;
 
 const CONFIG_FILENAME: &'static str = "config.yml";
 
@@ -37,6 +38,10 @@ enum Commands {
         #[arg(required = true)]
         title_parts: Vec<String>,
     },
+
+    /// Lists all tasks
+    #[command()]
+    Tasks,
 }
 
 fn main() {
@@ -78,6 +83,14 @@ fn main() {
                 .collect();
 
             store.add_task(&task_title)
+        }
+
+        (Commands::Tasks, Some(config)) => {
+            let store = Store::new(&xdg_dirs, &config);
+
+            for task in store.tasks() {
+                println!("{} | {}", task.id(), task.title());
+            }
         }
 
         (_, None) => {

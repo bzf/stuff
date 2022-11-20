@@ -1,10 +1,12 @@
 use chrono::prelude::*;
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 use std::fs::File;
 use std::io::prelude::*;
 use std::path::PathBuf;
 
 use crate::config::Config;
+use crate::task::Task;
 
 #[derive(Serialize, Deserialize)]
 struct EventPayload {
@@ -22,6 +24,7 @@ pub struct Store {
     payload_path: PathBuf,
 
     events: Vec<EventPayload>,
+    tasks: HashMap<uuid::Uuid, Task>,
 }
 
 impl Store {
@@ -38,8 +41,13 @@ impl Store {
             _config: config.clone(),
             payload_path,
 
+            tasks: reduce_events_to_tasks(&events),
             events,
         }
+    }
+
+    pub fn tasks(&self) -> Vec<Task> {
+        self.tasks.values().into_iter().cloned().collect()
     }
 
     pub fn add_task(&mut self, title: &str) {
@@ -63,9 +71,24 @@ impl Store {
         let payload =
             serde_json::to_string(&self.events).expect("Failed to serialize events to JSON");
 
-        println!("{:?}", self.payload_path);
-
         let mut file = File::create(&self.payload_path).unwrap();
         file.write_all(payload.as_bytes()).unwrap();
     }
+}
+
+fn reduce_events_to_tasks(event_payloads: &Vec<EventPayload>) -> HashMap<uuid::Uuid, Task> {
+    let mut tasks = HashMap::new();
+
+    for event_payload in event_payloads {
+        match &event_payload.event {
+            Event::AddTask { uuid, title } => {
+                tasks.insert(
+                    uuid.clone(),
+                    Task::new(uuid.clone(), title.clone(), event_payload.timestamp),
+                );
+            }
+        }
+    }
+
+    return tasks;
 }
