@@ -2,10 +2,11 @@ use chrono::prelude::*;
 use serde::Serialize;
 
 #[derive(Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct Task {
     id: uuid::Uuid,
     title: String,
-    _created_at: DateTime<Utc>,
+    created_at: DateTime<Utc>,
 
     completed_at: Option<DateTime<Utc>>,
 }
@@ -15,7 +16,7 @@ impl Task {
         Self {
             id,
             title,
-            _created_at: created_at,
+            created_at,
 
             completed_at: None,
         }

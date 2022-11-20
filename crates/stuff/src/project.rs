@@ -2,10 +2,11 @@ use chrono::prelude::*;
 use serde::Serialize;
 
 #[derive(Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct Project {
     id: uuid::Uuid,
     name: String,
-    _created_at: DateTime<Utc>,
+    created_at: DateTime<Utc>,
 }
 
 impl Project {
@@ -13,7 +14,7 @@ impl Project {
         Self {
             id,
             name,
-            _created_at: created_at,
+            created_at,
         }
     }
 
