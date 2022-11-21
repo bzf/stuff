@@ -45,7 +45,6 @@ impl Client {
 
     pub fn store(&self) -> Store {
         Store::new(
-            &self.xdg_dirs,
             &self
                 .config()
                 .expect("Tried to read store without initializing configuration first"),

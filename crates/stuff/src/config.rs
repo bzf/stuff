@@ -2,7 +2,7 @@ use std::path::{Path, PathBuf};
 
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Serialize, Deserialize)]
+#[derive(Clone, Serialize, Deserialize, Debug)]
 pub struct Config {
     client_id: uuid::Uuid,
     data_directory: PathBuf,
@@ -18,5 +18,9 @@ impl Config {
 
     pub fn client_id(&self) -> &uuid::Uuid {
         &self.client_id
+    }
+
+    pub fn data_directory(&self) -> &Path {
+        &self.data_directory
     }
 }
