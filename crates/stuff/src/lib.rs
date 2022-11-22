@@ -1,6 +1,8 @@
 mod client;
 mod config;
+mod event;
 mod project;
+mod state;
 mod store;
 mod task;
 

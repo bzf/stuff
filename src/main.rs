@@ -70,7 +70,7 @@ fn main() {
         }
 
         (Commands::Tasks, Some(_)) => {
-            for task in client.store().tasks() {
+            for task in client.store().state().tasks() {
                 let done_label = match task.completed_at() {
                     Some(_) => "(done)",
                     None => "",
@@ -89,7 +89,7 @@ fn main() {
         }
 
         (Commands::Projects, Some(_)) => {
-            for project in client.store().projects() {
+            for project in client.store().state().projects() {
                 println!("{} | {}", project.id(), project.name());
             }
         }

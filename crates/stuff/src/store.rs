@@ -1,34 +1,22 @@
 use chrono::prelude::*;
 use glob::glob;
-use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::fs::File;
 use std::io::prelude::*;
 use std::path::PathBuf;
 
 use crate::config::Config;
-use crate::project::Project;
-use crate::task::Task;
-
-#[derive(Serialize, Deserialize, Debug, Clone)]
-struct EventPayload {
-    event: Event,
-    timestamp: DateTime<Utc>,
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone)]
-enum Event {
-    AddTask { uuid: uuid::Uuid, title: String },
-    MarkTaskAsComplete { task_id: uuid::Uuid },
-    MarkTaskAsIncomplete { task_id: uuid::Uuid },
-    CreateProject { uuid: uuid::Uuid, name: String },
-}
+use crate::event::{Event, EventPayload};
+use crate::state::State;
 
 pub struct Store {
     _config: Config,
     payload_path: PathBuf,
 
     events: HashMap<uuid::Uuid, Vec<EventPayload>>,
+
+    /// Up-to-date represantation of `events` for passing to clients.
+    state: State,
 }
 
 impl Store {
@@ -69,20 +57,20 @@ impl Store {
             }
         }
 
+        let mut event_payloads: Vec<&EventPayload> = events.values().flatten().collect();
+        event_payloads.sort_by(|&a, &b| a.timestamp.partial_cmp(&b.timestamp).unwrap());
+
         Self {
             _config: config.clone(),
             payload_path,
 
+            state: State::from_events(event_payloads),
             events,
         }
     }
 
-    pub fn tasks(&self) -> Vec<Task> {
-        reduce_events_to_tasks(self.ordered_event_payloads())
-    }
-
-    pub fn projects(&self) -> Vec<Project> {
-        reduce_events_to_projects(self.ordered_event_payloads())
+    pub fn state(&self) -> &State {
+        &self.state
     }
 
     pub fn add_task(&mut self, title: &str) {
@@ -120,9 +108,10 @@ impl Store {
         self.events
             .entry(*self._config.client_id())
             .and_modify(|v| v.push(event_payload.clone()))
-            .or_insert(Vec::from([event_payload]));
+            .or_insert(Vec::from([event_payload.clone()]));
 
         self.write_to_disk();
+        self.state.apply_event(&event_payload);
     }
 
     fn write_to_disk(&mut self) {
@@ -135,61 +124,4 @@ impl Store {
         let mut file = File::create(&self.payload_path).unwrap();
         file.write_all(payload.as_bytes()).unwrap();
     }
-
-    fn ordered_event_payloads(&self) -> Vec<&EventPayload> {
-        let mut event_payloads: Vec<&EventPayload> = self.events.values().flatten().collect();
-        event_payloads.sort_by(|&a, &b| a.timestamp.partial_cmp(&b.timestamp).unwrap());
-
-        event_payloads
-    }
-}
-
-fn reduce_events_to_tasks(event_payloads: Vec<&EventPayload>) -> Vec<Task> {
-    let mut tasks = indexmap::map::IndexMap::new();
-
-    for event_payload in event_payloads {
-        match &event_payload.event {
-            Event::AddTask { uuid, title } => {
-                tasks.insert(
-                    uuid.clone(),
-                    Task::new(uuid.clone(), title.clone(), event_payload.timestamp),
-                );
-            }
-
-            Event::MarkTaskAsComplete { task_id } => {
-                tasks
-                    .entry(*task_id)
-                    .and_modify(|task| task.set_completed_at(&event_payload.timestamp));
-            }
-
-            Event::MarkTaskAsIncomplete { task_id } => {
-                tasks
-                    .entry(*task_id)
-                    .and_modify(|task| task.set_incomplete());
-            }
-
-            _ => (),
-        }
-    }
-
-    return tasks.into_values().collect();
-}
-
-fn reduce_events_to_projects(event_payloads: Vec<&EventPayload>) -> Vec<Project> {
-    let mut projects = indexmap::map::IndexMap::new();
-
-    for event_payload in event_payloads {
-        match &event_payload.event {
-            Event::CreateProject { uuid, name } => {
-                projects.insert(
-                    uuid.clone(),
-                    Project::new(uuid.clone(), name.clone(), event_payload.timestamp),
-                );
-            }
-
-            _ => (),
-        }
-    }
-
-    return projects.into_values().collect();
 }

@@ -5,12 +5,12 @@
 
 #[tauri::command]
 fn tasks(stuff_client: tauri::State<stuff::Client>) -> Vec<stuff::Task> {
-    stuff_client.store().tasks()
+    stuff_client.store().state().tasks()
 }
 
 #[tauri::command]
 fn projects(stuff_client: tauri::State<stuff::Client>) -> Vec<stuff::Project> {
-    stuff_client.store().projects()
+    stuff_client.store().state().projects()
 }
 
 #[tauri::command]
