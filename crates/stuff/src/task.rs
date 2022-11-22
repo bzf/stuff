@@ -37,4 +37,8 @@ impl Task {
     pub fn set_completed_at(&mut self, timestamp: &DateTime<Utc>) {
         self.completed_at = Some(*timestamp);
     }
+
+    pub fn set_incomplete(&mut self) {
+        self.completed_at = None;
+    }
 }

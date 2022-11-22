@@ -20,6 +20,7 @@ struct EventPayload {
 enum Event {
     AddTask { uuid: uuid::Uuid, title: String },
     MarkTaskAsComplete { task_id: uuid::Uuid },
+    MarkTaskAsIncomplete { task_id: uuid::Uuid },
     CreateProject { uuid: uuid::Uuid, name: String },
 }
 
@@ -97,6 +98,12 @@ impl Store {
         });
     }
 
+    pub fn mark_task_as_incomplete(&mut self, task_id: &uuid::Uuid) {
+        self.push_event(Event::MarkTaskAsIncomplete {
+            task_id: task_id.clone(),
+        });
+    }
+
     pub fn create_project(&mut self, name: &str) {
         self.push_event(Event::CreateProject {
             uuid: uuid::Uuid::new_v4(),
@@ -146,6 +153,12 @@ fn reduce_events_to_tasks(event_payloads: &HashMap<uuid::Uuid, Vec<EventPayload>
                 tasks
                     .entry(*task_id)
                     .and_modify(|task| task.set_completed_at(&event_payload.timestamp));
+            }
+
+            Event::MarkTaskAsIncomplete { task_id } => {
+                tasks
+                    .entry(*task_id)
+                    .and_modify(|task| task.set_incomplete());
             }
 
             _ => (),

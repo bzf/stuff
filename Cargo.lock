@@ -2804,6 +2804,7 @@ dependencies = [
  "stuff",
  "tauri",
  "tauri-build",
+ "uuid 1.2.2",
 ]
 
 [[package]]

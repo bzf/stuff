@@ -1,17 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
 import { useProjects, useTasks } from "../stuff";
 import PageTitle from "../components/PageTitle";
-
-async function loadData() {
-  const projects = await invoke("projects");
-  const tasks = await invoke("tasks");
-
-  return {
-    projects,
-    tasks,
-  };
-}
 
 function App() {
   const [title, setTitle] = useState("");

@@ -25,3 +25,11 @@ export function useTasks() {
 
   return tasks;
 }
+
+export async function markTaskAsComplete(taskId: string) {
+  await invoke("mark_task_as_complete", { taskId });
+}
+
+export async function markTaskAsIncomplete(taskId: string) {
+  await invoke("mark_task_as_incomplete", { taskId });
+}
