@@ -78,11 +78,11 @@ impl Store {
     }
 
     pub fn tasks(&self) -> Vec<Task> {
-        reduce_events_to_tasks(&self.events)
+        reduce_events_to_tasks(self.ordered_event_payloads())
     }
 
     pub fn projects(&self) -> Vec<Project> {
-        reduce_events_to_projects(&self.events)
+        reduce_events_to_projects(self.ordered_event_payloads())
     }
 
     pub fn add_task(&mut self, title: &str) {
@@ -135,12 +135,19 @@ impl Store {
         let mut file = File::create(&self.payload_path).unwrap();
         file.write_all(payload.as_bytes()).unwrap();
     }
+
+    fn ordered_event_payloads(&self) -> Vec<&EventPayload> {
+        let mut event_payloads: Vec<&EventPayload> = self.events.values().flatten().collect();
+        event_payloads.sort_by(|&a, &b| a.timestamp.partial_cmp(&b.timestamp).unwrap());
+
+        event_payloads
+    }
 }
 
-fn reduce_events_to_tasks(event_payloads: &HashMap<uuid::Uuid, Vec<EventPayload>>) -> Vec<Task> {
-    let mut tasks = HashMap::new();
+fn reduce_events_to_tasks(event_payloads: Vec<&EventPayload>) -> Vec<Task> {
+    let mut tasks = indexmap::map::IndexMap::new();
 
-    for event_payload in event_payloads.values().flatten() {
+    for event_payload in event_payloads {
         match &event_payload.event {
             Event::AddTask { uuid, title } => {
                 tasks.insert(
@@ -168,12 +175,10 @@ fn reduce_events_to_tasks(event_payloads: &HashMap<uuid::Uuid, Vec<EventPayload>
     return tasks.into_values().collect();
 }
 
-fn reduce_events_to_projects(
-    event_payloads: &HashMap<uuid::Uuid, Vec<EventPayload>>,
-) -> Vec<Project> {
-    let mut projects = HashMap::new();
+fn reduce_events_to_projects(event_payloads: Vec<&EventPayload>) -> Vec<Project> {
+    let mut projects = indexmap::map::IndexMap::new();
 
-    for event_payload in event_payloads.values().flatten() {
+    for event_payload in event_payloads {
         match &event_payload.event {
             Event::CreateProject { uuid, name } => {
                 projects.insert(
