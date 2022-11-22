@@ -1,6 +1,6 @@
-import { useState } from "react";
 import { markTaskAsComplete, markTaskAsIncomplete, useTasks } from "../stuff";
 import PageTitle from "../components/PageTitle";
+import NewTaskForm from "../components/NewTaskForm";
 
 function TaskItem({ task }) {
   function handleToggle() {
@@ -29,8 +29,6 @@ function TaskItem({ task }) {
 }
 
 function App() {
-  const [title, setTitle] = useState("");
-
   const tasks = useTasks();
 
   if (tasks === undefined) {
@@ -44,18 +42,7 @@ function App() {
     <>
       <PageTitle title="Inbox" />
 
-      <div className="row">
-        <div>
-          <input
-            id="greet-input"
-            value={title}
-            onChange={(e) => setTitle(e.currentTarget.value)}
-            placeholder="Enter a name..."
-          />
-
-          <button type="button">Add</button>
-        </div>
-      </div>
+      <NewTaskForm />
 
       <div className="flex flex-col pb-4">
         {visibleTasks.map((task) => (

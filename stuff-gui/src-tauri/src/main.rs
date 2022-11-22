@@ -56,6 +56,15 @@ fn mark_task_as_incomplete(task_id: &str, store_lock: tauri::State<StoreSync>) {
     }
 }
 
+#[tauri::command]
+fn create_project(name: &str, store_lock: tauri::State<StoreSync>) {
+    if let Ok(mut store) = store_lock.lock() {
+        store.create_project(name);
+    } else {
+        panic!("Failed to read the store! 😱");
+    }
+}
+
 fn main() {
     use tauri::Manager;
 
@@ -88,6 +97,7 @@ fn main() {
             add_task,
             mark_task_as_complete,
             mark_task_as_incomplete,
+            create_project,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

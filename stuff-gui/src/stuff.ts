@@ -36,6 +36,14 @@ export function useTasks() {
   return tasks;
 }
 
+export async function addTask(title: string) {
+  await invoke("add_task", { title });
+}
+
+export async function createProject(name: string) {
+  await invoke("create_project", { name });
+}
+
 export async function markTaskAsComplete(taskId: string) {
   await invoke("mark_task_as_complete", { taskId });
 }
