@@ -18,7 +18,9 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 
         <section className="w-full flex flex-col gap-2">
           {projects.map((project) => (
-            <AppLink href={`/projects/${project.id}`}>{project.name}</AppLink>
+            <AppLink key={project.id} href={`/projects/${project.id}`}>
+              {project.name}
+            </AppLink>
           ))}
         </section>
       </div>
