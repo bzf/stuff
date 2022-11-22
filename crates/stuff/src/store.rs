@@ -4,6 +4,7 @@ use std::collections::HashMap;
 use std::fs::File;
 use std::io::prelude::*;
 use std::path::PathBuf;
+use std::sync::mpsc::{channel, Receiver, Sender};
 
 use crate::config::Config;
 use crate::event::{Event, EventPayload};
@@ -17,10 +18,14 @@ pub struct Store {
 
     /// Up-to-date represantation of `events` for passing to clients.
     state: State,
+
+    notify_sender: Sender<State>,
 }
 
 impl Store {
-    pub fn new(config: &Config) -> Self {
+    pub fn new(config: &Config) -> (Self, Receiver<State>) {
+        let (notify_sender, notify_receiver) = channel();
+
         let filename = format!("{}.json", config.client_id());
         let mut payload_path = config.data_directory().to_path_buf();
         payload_path.push(filename);
@@ -60,13 +65,17 @@ impl Store {
         let mut event_payloads: Vec<&EventPayload> = events.values().flatten().collect();
         event_payloads.sort_by(|&a, &b| a.timestamp.partial_cmp(&b.timestamp).unwrap());
 
-        Self {
-            _config: config.clone(),
-            payload_path,
+        (
+            Self {
+                _config: config.clone(),
+                payload_path,
+                notify_sender,
 
-            state: State::from_events(event_payloads),
-            events,
-        }
+                state: State::from_events(event_payloads),
+                events,
+            },
+            notify_receiver,
+        )
     }
 
     pub fn state(&self) -> &State {
@@ -112,6 +121,7 @@ impl Store {
 
         self.write_to_disk();
         self.state.apply_event(&event_payload);
+        self.notify_sender.send(self.state.clone()).unwrap();
     }
 
     fn write_to_disk(&mut self) {

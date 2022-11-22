@@ -1,7 +1,9 @@
 use std::fs::File;
 use std::io::prelude::*;
+use std::sync::mpsc::Receiver;
 
 use crate::config::Config;
+use crate::state::State;
 use crate::Store;
 
 const CONFIG_FILENAME: &'static str = "config.yml";
@@ -43,7 +45,7 @@ impl Client {
             .and_then(|file| serde_yaml::from_reader(file).ok())
     }
 
-    pub fn store(&self) -> Store {
+    pub fn store(&self) -> (Store, Receiver<State>) {
         Store::new(
             &self
                 .config()
