@@ -13,14 +13,19 @@ pub struct Task {
 }
 
 impl Task {
-    pub fn new(id: uuid::Uuid, title: String, created_at: DateTime<Utc>) -> Self {
+    pub fn new(
+        id: uuid::Uuid,
+        title: String,
+        created_at: DateTime<Utc>,
+        project_id: Option<uuid::Uuid>,
+    ) -> Self {
         Self {
             id,
             title,
             created_at,
+            project_id,
 
             completed_at: None,
-            project_id: None,
         }
     }
 

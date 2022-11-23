@@ -82,10 +82,11 @@ impl Store {
         &self.state
     }
 
-    pub fn add_task(&mut self, title: &str) {
+    pub fn add_task(&mut self, title: &str, project_id: Option<uuid::Uuid>) {
         self.push_event(Event::AddTask {
             uuid: uuid::Uuid::new_v4(),
             title: title.to_string(),
+            project_id,
         })
     }
 

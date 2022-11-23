@@ -37,10 +37,19 @@ impl State {
 
     pub fn apply_event(&mut self, event_payload: &EventPayload) {
         match &event_payload.event {
-            Event::AddTask { uuid, title } => {
+            Event::AddTask {
+                uuid,
+                title,
+                project_id,
+            } => {
                 self.tasks.insert(
                     uuid.clone(),
-                    Task::new(uuid.clone(), title.clone(), event_payload.timestamp),
+                    Task::new(
+                        uuid.clone(),
+                        title.clone(),
+                        event_payload.timestamp,
+                        *project_id,
+                    ),
                 );
             }
 

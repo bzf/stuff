@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { addTask } from "../stuff";
 
-export default function NewTaskForm() {
+export default function NewTaskForm({ projectId }) {
   const [title, setTitle] = useState("");
   const [showInputForm, setShowInputForm] = useState(false);
 
   function handleAdd() {
     if (title === "") return;
 
-    addTask(title);
+    addTask(title, projectId);
     setTitle("");
   }
 

@@ -35,7 +35,7 @@ function App() {
     return <div>loading</div>;
   }
 
-  const visibleTasks = tasks.filter((task) => task.projectId === undefined);
+  const visibleTasks = tasks.filter((task) => !task.projectId);
 
   return (
     <>
@@ -47,7 +47,7 @@ function App() {
             <TaskItem task={task} key={task.id} />
           ))}
         </div>
-        <NewTaskForm />
+        <NewTaskForm projectId={undefined} />
       </div>
     </>
   );
