@@ -1,5 +1,6 @@
 use chrono::prelude::*;
 use serde::{Deserialize, Serialize};
+use uuid::Uuid;
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct EventPayload {
@@ -9,8 +10,10 @@ pub struct EventPayload {
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub enum Event {
-    AddTask { uuid: uuid::Uuid, title: String },
-    MarkTaskAsComplete { task_id: uuid::Uuid },
-    MarkTaskAsIncomplete { task_id: uuid::Uuid },
-    CreateProject { uuid: uuid::Uuid, name: String },
+    AddTask { uuid: Uuid, title: String },
+    MarkTaskAsComplete { task_id: Uuid },
+    MarkTaskAsIncomplete { task_id: Uuid },
+    MoveTaskToProject { task_id: Uuid, project_id: Uuid },
+    MoveTaskToInbox { task_id: Uuid },
+    CreateProject { uuid: Uuid, name: String },
 }

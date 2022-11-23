@@ -101,6 +101,19 @@ impl Store {
         });
     }
 
+    pub fn move_task_to_project(&mut self, task_id: &uuid::Uuid, project_id: &uuid::Uuid) {
+        self.push_event(Event::MoveTaskToProject {
+            task_id: task_id.clone(),
+            project_id: project_id.clone(),
+        })
+    }
+
+    pub fn move_task_to_inbox(&mut self, task_id: &uuid::Uuid) {
+        self.push_event(Event::MoveTaskToInbox {
+            task_id: task_id.clone(),
+        })
+    }
+
     pub fn create_project(&mut self, name: &str) {
         self.push_event(Event::CreateProject {
             uuid: uuid::Uuid::new_v4(),

@@ -9,6 +9,7 @@ pub struct Task {
     created_at: DateTime<Utc>,
 
     completed_at: Option<DateTime<Utc>>,
+    project_id: Option<uuid::Uuid>,
 }
 
 impl Task {
@@ -19,6 +20,7 @@ impl Task {
             created_at,
 
             completed_at: None,
+            project_id: None,
         }
     }
 
@@ -40,5 +42,9 @@ impl Task {
 
     pub fn set_incomplete(&mut self) {
         self.completed_at = None;
+    }
+
+    pub fn set_project_id(&mut self, project_id: Option<uuid::Uuid>) {
+        self.project_id = project_id;
     }
 }

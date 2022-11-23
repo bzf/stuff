@@ -57,6 +57,31 @@ fn mark_task_as_incomplete(task_id: &str, store_lock: tauri::State<StoreSync>) {
 }
 
 #[tauri::command]
+fn move_task_to_inbox(task_id: &str, store_lock: tauri::State<StoreSync>) {
+    if let Ok(task_id) = uuid::Uuid::parse_str(task_id) {
+        if let Ok(mut store) = store_lock.lock() {
+            store.move_task_to_inbox(&task_id);
+        } else {
+            panic!("Failed to read the store! 😱");
+        }
+    }
+}
+
+#[tauri::command]
+fn move_task_to_project(task_id: &str, project_id: &str, store_lock: tauri::State<StoreSync>) {
+    if let (Ok(task_id), Ok(project_id)) = (
+        uuid::Uuid::parse_str(task_id),
+        uuid::Uuid::parse_str(project_id),
+    ) {
+        if let Ok(mut store) = store_lock.lock() {
+            store.move_task_to_project(&task_id, &project_id);
+        } else {
+            panic!("Failed to read the store! 😱");
+        }
+    }
+}
+
+#[tauri::command]
 fn create_project(name: &str, store_lock: tauri::State<StoreSync>) {
     if let Ok(mut store) = store_lock.lock() {
         store.create_project(name);
@@ -97,6 +122,8 @@ fn main() {
             add_task,
             mark_task_as_complete,
             mark_task_as_incomplete,
+            move_task_to_inbox,
+            move_task_to_project,
             create_project,
         ])
         .run(tauri::generate_context!())

@@ -56,6 +56,21 @@ impl State {
                     .and_modify(|task| task.set_incomplete());
             }
 
+            Event::MoveTaskToInbox { task_id } => {
+                self.tasks
+                    .entry(*task_id)
+                    .and_modify(|task| task.set_project_id(None));
+            }
+
+            Event::MoveTaskToProject {
+                task_id,
+                project_id,
+            } => {
+                self.tasks
+                    .entry(*task_id)
+                    .and_modify(|task| task.set_project_id(Some(*project_id)));
+            }
+
             Event::CreateProject { uuid, name } => {
                 self.projects.insert(
                     uuid.clone(),

@@ -51,3 +51,11 @@ export async function markTaskAsComplete(taskId: string) {
 export async function markTaskAsIncomplete(taskId: string) {
   await invoke("mark_task_as_incomplete", { taskId });
 }
+
+export async function moveTaskToInbox(taskId: string) {
+  await invoke("move_task_to_inbox", { taskId });
+}
+
+export async function moveTaskToProject(taskId: string, projectId: string) {
+  await invoke("move_task_to_project", { taskId, projectId });
+}
