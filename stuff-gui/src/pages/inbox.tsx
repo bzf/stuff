@@ -36,7 +36,6 @@ function App() {
   }
 
   const visibleTasks = tasks.filter((task) => task.projectId === undefined);
-  console.log({ visibleTasks });
 
   return (
     <>
