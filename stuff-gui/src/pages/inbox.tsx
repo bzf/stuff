@@ -42,12 +42,13 @@ function App() {
     <>
       <PageTitle title="Inbox" />
 
-      <NewTaskForm />
-
-      <div className="flex flex-col pb-4">
-        {visibleTasks.map((task) => (
-          <TaskItem task={task} key={task.id} />
-        ))}
+      <div>
+        <div className="flex flex-col pb-4">
+          {visibleTasks.map((task) => (
+            <TaskItem task={task} key={task.id} />
+          ))}
+        </div>
+        <NewTaskForm />
       </div>
     </>
   );
