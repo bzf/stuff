@@ -1,9 +1,11 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { AppProps } from "next/app";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useProjects } from "../stuff";
 
 import "../style.css";
+import { faHeart } from "@fortawesome/free-regular-svg-icons";
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   const projects = useProjects();
@@ -12,13 +14,21 @@ export default function MyApp({ Component, pageProps }: AppProps) {
     <div className="flex h-screen w-screen overflow-hidden">
       <div className="bg-gray-50 min-w-[255px] h-full py-4 px-2 flex flex-col gap-6 overflow-y-auto">
         <section className="w-full flex flex-col gap-2">
-          <AppLink href="/inbox">Inbox</AppLink>
-          <AppLink href="/today">Today</AppLink>
+          <AppLink icon={faHeart} href="/inbox">
+            Inbox
+          </AppLink>
+          <AppLink icon={faHeart} href="/today">
+            Today
+          </AppLink>
         </section>
 
         <section className="w-full flex flex-col gap-2">
           {projects.map((project) => (
-            <AppLink key={project.id} href={`/projects/${project.id}`}>
+            <AppLink
+              key={project.id}
+              icon={faHeart}
+              href={`/projects/${project.id}`}
+            >
               {project.name}
             </AppLink>
           ))}
@@ -34,7 +44,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   );
 }
 
-function AppLink({ href, children }) {
+function AppLink({ icon, href, children }) {
   const router = useRouter();
   const classes = [
     "w-full",
@@ -43,6 +53,9 @@ function AppLink({ href, children }) {
     "h-8",
     "flex items-center px-3",
     "font-medium",
+    "flex",
+    "items-center",
+    "gap-2",
   ];
 
   if (router.asPath === href) {
@@ -51,7 +64,10 @@ function AppLink({ href, children }) {
 
   return (
     <Link href={href} legacyBehavior>
-      <a className={classes.join(" ")}>{children}</a>
+      <a className={classes.join(" ")}>
+        <FontAwesomeIcon fixedWidth size="xs" icon={icon} />
+        {children}
+      </a>
     </Link>
   );
 }
