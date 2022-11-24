@@ -49,7 +49,7 @@ function AppLink({ icon, href, children }) {
   const classes = [
     "w-full",
     "block",
-    "rounded",
+    "rounded-lg",
     "h-8",
     "flex items-center px-3",
     "font-medium",
