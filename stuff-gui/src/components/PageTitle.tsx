@@ -1,3 +1,7 @@
 export default function PageTitle({ title }) {
-  return <h1 className="text-lg font-bold text-gray-900 ">{title}</h1>;
+  return (
+    <h1 className="text-4xl font-bold tracking-tight text-gray-900 pt-8 pb-4">
+      {title}
+    </h1>
+  );
 }
