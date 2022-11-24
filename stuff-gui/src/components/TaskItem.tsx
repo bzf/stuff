@@ -10,7 +10,7 @@ export default function TaskItem({ task }) {
   }
 
   return (
-    <div className="border-b py-3 flex gap-3 justify-start items-start">
+    <div className="py-1 flex gap-3 justify-start items-start">
       <span>
         <input
           type="checkbox"
