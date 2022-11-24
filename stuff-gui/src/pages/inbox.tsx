@@ -1,32 +1,7 @@
-import { markTaskAsComplete, markTaskAsIncomplete, useTasks } from "../stuff";
+import { useTasks } from "../stuff";
 import PageTitle from "../components/PageTitle";
 import NewTaskForm from "../components/NewTaskForm";
-
-function TaskItem({ task }) {
-  function handleToggle() {
-    if (!!task.completedAt) {
-      markTaskAsIncomplete(task.id);
-    } else {
-      markTaskAsComplete(task.id);
-    }
-  }
-
-  return (
-    <div className="border-b py-3 flex gap-3 justify-start items-start">
-      <span>
-        <input
-          type="checkbox"
-          onChange={handleToggle}
-          checked={!!task.completedAt}
-        />
-      </span>
-
-      <div>
-        <span className="font-medium text-md text-gray-700">{task.title}</span>
-      </div>
-    </div>
-  );
-}
+import TaskItem from "../components/TaskItem";
 
 function App() {
   const tasks = useTasks();
