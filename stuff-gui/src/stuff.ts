@@ -10,25 +10,33 @@ export function useProject(projectId: string) {
 function useStuffState() {
   const [tasks, setTasks] = useState([]);
   const [projects, setProjects] = useState([]);
+  const [projectHeadings, setProjectHeadings] = useState([]);
 
   useEffect(() => {
     listen("next-stuff-state", () => {
       invoke("tasks").then(setTasks);
       invoke("projects").then(setProjects);
+      invoke("project_headings").then(setProjectHeadings);
     });
   }, [setTasks, setProjects]);
 
   useEffect(() => {
     invoke("tasks").then(setTasks);
     invoke("projects").then(setProjects);
+    invoke("project_headings").then(setProjectHeadings);
   }, []);
 
-  return { tasks, projects };
+  return { tasks, projects, projectHeadings };
 }
 
 export function useProjects() {
   const { projects } = useStuffState();
   return projects;
+}
+
+export function useProjectHeadings(projectId: string) {
+  const { projectHeadings } = useStuffState();
+  return projectHeadings.filter((heading) => heading.projectId === projectId);
 }
 
 export function useTasks() {
@@ -42,6 +50,10 @@ export async function addTask(title: string, projectId?: string) {
 
 export async function createProject(name: string) {
   await invoke("create_project", { name });
+}
+
+export async function addProjectHeading(projectId: string, name: string) {
+  await invoke("add_project_heading", { projectId, name });
 }
 
 export async function markTaskAsComplete(taskId: string) {

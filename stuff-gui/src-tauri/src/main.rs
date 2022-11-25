@@ -26,6 +26,15 @@ fn projects(store_lock: tauri::State<StoreSync>) -> Vec<stuff::Project> {
 }
 
 #[tauri::command]
+fn project_headings(store_lock: tauri::State<StoreSync>) -> Vec<stuff::ProjectHeading> {
+    if let Ok(store) = store_lock.lock() {
+        store.state().project_headings()
+    } else {
+        panic!("Failed to read the store! 😱");
+    }
+}
+
+#[tauri::command]
 fn add_task(title: &str, project_id: Option<&str>, store_lock: tauri::State<StoreSync>) {
     if let Ok(mut store) = store_lock.lock() {
         store.add_task(
@@ -93,6 +102,17 @@ fn create_project(name: &str, store_lock: tauri::State<StoreSync>) {
     }
 }
 
+#[tauri::command]
+fn add_project_heading(project_id: &str, name: &str, store_lock: tauri::State<StoreSync>) {
+    if let Ok(project_id) = uuid::Uuid::parse_str(project_id) {
+        if let Ok(mut store) = store_lock.lock() {
+            store.add_project_heading(&project_id, name);
+        } else {
+            panic!("Failed to read the store! 😱");
+        }
+    }
+}
+
 fn main() {
     use tauri::Manager;
 
@@ -122,12 +142,14 @@ fn main() {
         .invoke_handler(tauri::generate_handler![
             tasks,
             projects,
+            project_headings,
             add_task,
             mark_task_as_complete,
             mark_task_as_incomplete,
             move_task_to_inbox,
             move_task_to_project,
             create_project,
+            add_project_heading,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

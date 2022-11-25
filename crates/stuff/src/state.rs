@@ -1,12 +1,13 @@
 use serde::Serialize;
 
 use crate::event::{Event, EventPayload};
-use crate::{Project, Task};
+use crate::{Project, ProjectHeading, Task};
 
 #[derive(Serialize, Clone)]
 pub struct State {
     tasks: indexmap::map::IndexMap<uuid::Uuid, Task>,
     projects: indexmap::map::IndexMap<uuid::Uuid, Project>,
+    project_headings: indexmap::map::IndexMap<uuid::Uuid, ProjectHeading>,
 }
 
 impl State {
@@ -14,6 +15,7 @@ impl State {
         Self {
             tasks: indexmap::map::IndexMap::new(),
             projects: indexmap::map::IndexMap::new(),
+            project_headings: indexmap::map::IndexMap::new(),
         }
     }
 
@@ -23,6 +25,10 @@ impl State {
 
     pub fn projects(&self) -> Vec<Project> {
         self.projects.values().cloned().collect()
+    }
+
+    pub fn project_headings(&self) -> Vec<ProjectHeading> {
+        self.project_headings.values().cloned().collect()
     }
 
     pub fn from_events(event_payloads: Vec<&EventPayload>) -> Self {
@@ -84,6 +90,17 @@ impl State {
                 self.projects.insert(
                     uuid.clone(),
                     Project::new(uuid.clone(), name.clone(), event_payload.timestamp),
+                );
+            }
+
+            Event::AddProjectHeading {
+                uuid,
+                project_id,
+                name,
+            } => {
+                self.project_headings.insert(
+                    *uuid,
+                    ProjectHeading::new(*uuid, *project_id, name.clone(), event_payload.timestamp),
                 );
             }
         }

@@ -32,4 +32,9 @@ pub enum Event {
         uuid: Uuid,
         name: String,
     },
+    AddProjectHeading {
+        uuid: Uuid,
+        project_id: Uuid,
+        name: String,
+    },
 }

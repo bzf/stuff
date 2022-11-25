@@ -122,6 +122,14 @@ impl Store {
         })
     }
 
+    pub fn add_project_heading(&mut self, project_id: &uuid::Uuid, name: &str) {
+        self.push_event(Event::AddProjectHeading {
+            uuid: uuid::Uuid::new_v4(),
+            project_id: *project_id,
+            name: name.to_string(),
+        })
+    }
+
     fn push_event(&mut self, event: Event) {
         let event_payload = EventPayload {
             event,
