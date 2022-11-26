@@ -14,10 +14,10 @@ function App() {
 
   return (
     <>
-      <PageTitle title="Inbox" />
-
       <div>
-        <div className="flex flex-col pb-4">
+        <div className="flex flex-col pb-4 px-3">
+          <PageTitle title="Inbox" />
+
           {visibleTasks.map((task) => (
             <TaskItem task={task} key={task.id} />
           ))}

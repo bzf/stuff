@@ -56,7 +56,7 @@ export default function NewTaskForm({ projectId }) {
     );
   } else {
     return (
-      <div>
+      <div className="px-3">
         <button onClick={() => setShowInputForm(true)} className="block">
           Add task
         </button>

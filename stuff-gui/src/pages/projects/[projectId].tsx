@@ -26,10 +26,10 @@ export default function Project() {
 
   return (
     <>
-      <PageTitle title={project.name} />
-
       <div>
-        <div className="flex flex-col pb-4">
+        <div className="flex flex-col pb-4 px-3">
+          <PageTitle title={project.name} />
+
           {visibleTasks.map((task) => (
             <TaskItem task={task} key={task.id} />
           ))}
@@ -37,7 +37,7 @@ export default function Project() {
 
         <NewTaskForm projectId={project.id} />
 
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-6 px-3">
           {headings.map((heading) => (
             <ProjectHeading key={heading.id} heading={heading} tasks={tasks} />
           ))}
