@@ -102,11 +102,11 @@ fn move_task_to_project(task_id: &str, project_id: &str, store_lock: tauri::Stat
 }
 
 #[tauri::command]
-fn create_project(name: &str, store_lock: tauri::State<StoreSync>) {
+fn create_project(name: &str, store_lock: tauri::State<StoreSync>) -> Option<stuff::Project> {
     if let Ok(mut store) = store_lock.lock() {
-        store.create_project(name);
+        store.create_project(name).map(|p| p.clone())
     } else {
-        panic!("Failed to read the store! 😱");
+        unreachable!("Failed to read the store! 😱");
     }
 }
 

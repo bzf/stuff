@@ -6,7 +6,7 @@ use crate::{Project, ProjectHeading, Task};
 #[derive(Serialize, Clone)]
 pub struct State {
     tasks: indexmap::map::IndexMap<uuid::Uuid, Task>,
-    projects: indexmap::map::IndexMap<uuid::Uuid, Project>,
+    pub projects: indexmap::map::IndexMap<uuid::Uuid, Project>,
     project_headings: indexmap::map::IndexMap<uuid::Uuid, ProjectHeading>,
 }
 

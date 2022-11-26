@@ -123,11 +123,15 @@ impl Store {
         })
     }
 
-    pub fn create_project(&mut self, name: &str) {
+    pub fn create_project(&mut self, name: &str) -> Option<&crate::Project> {
+        let uuid = uuid::Uuid::new_v4();
+
         self.push_event(Event::CreateProject {
-            uuid: uuid::Uuid::new_v4(),
+            uuid,
             name: name.to_string(),
-        })
+        });
+
+        self.state.projects.get(&uuid).clone()
     }
 
     pub fn add_project_heading(&mut self, project_id: &uuid::Uuid, name: &str, index: usize) {

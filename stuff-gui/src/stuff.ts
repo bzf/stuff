@@ -2,6 +2,11 @@ import { useEffect, useState } from "react";
 import { listen } from "@tauri-apps/api/event";
 import { invoke } from "@tauri-apps/api/tauri";
 
+export interface IProject {
+  id: string;
+  name: string;
+}
+
 export function useProject(projectId: string) {
   const projects = useProjects();
   return projects.find((project) => project.id === projectId);
@@ -29,7 +34,7 @@ function useStuffState() {
   return { tasks, projects, projectHeadings };
 }
 
-export function useProjects() {
+export function useProjects(): IProject[] {
   const { projects } = useStuffState();
   return projects;
 }
@@ -53,8 +58,8 @@ export async function addTask(
   await invoke("add_task", { title, description, projectId, projectHeadingId });
 }
 
-export async function createProject(name: string) {
-  await invoke("create_project", { name });
+export async function createProject(name: string): Option<IProject> {
+  return await invoke("create_project", { name });
 }
 
 export async function addProjectHeading(

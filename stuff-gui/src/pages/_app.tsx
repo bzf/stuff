@@ -6,33 +6,42 @@ import { useProjects } from "../stuff";
 
 import "../style.css";
 import { faHeart } from "@fortawesome/free-regular-svg-icons";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   const projects = useProjects();
 
   return (
     <div className="flex h-screen w-screen overflow-hidden">
-      <div className="bg-gray-50 min-w-[255px] h-full py-4 px-2 flex flex-col gap-6 overflow-y-auto">
-        <section className="w-full flex flex-col gap-2">
-          <AppLink icon={faHeart} href="/inbox">
-            Inbox
-          </AppLink>
-          <AppLink icon={faHeart} href="/today">
-            Today
-          </AppLink>
-        </section>
-
-        <section className="w-full flex flex-col gap-2">
-          {projects.map((project) => (
-            <AppLink
-              key={project.id}
-              icon={faHeart}
-              href={`/projects/${project.id}`}
-            >
-              {project.name}
+      <div className="bg-gray-50 min-w-[255px] h-full py-4 px-2 flex justify-between flex-col">
+        <div className="flex flex-col justify-between gap-6">
+          <section className="w-full flex flex-col gap-2">
+            <AppLink icon={faHeart} href="/inbox">
+              Inbox
             </AppLink>
-          ))}
-        </section>
+            <AppLink icon={faHeart} href="/today">
+              Today
+            </AppLink>
+          </section>
+
+          <section className="w-full flex flex-col gap-2">
+            {projects.map((project) => (
+              <AppLink
+                key={project.id}
+                icon={faHeart}
+                href={`/projects/${project.id}`}
+              >
+                {project.name}
+              </AppLink>
+            ))}
+          </section>
+        </div>
+
+        <div>
+          <AppLink icon={faPlus} href={`/projects/new`}>
+            New project
+          </AppLink>
+        </div>
       </div>
 
       <div className="px-8 flex-1 py-4 overflow-y-auto">
