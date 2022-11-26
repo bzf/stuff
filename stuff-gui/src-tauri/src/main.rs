@@ -111,10 +111,15 @@ fn create_project(name: &str, store_lock: tauri::State<StoreSync>) {
 }
 
 #[tauri::command]
-fn add_project_heading(project_id: &str, name: &str, store_lock: tauri::State<StoreSync>) {
+fn add_project_heading(
+    project_id: &str,
+    name: &str,
+    index: usize,
+    store_lock: tauri::State<StoreSync>,
+) {
     if let Ok(project_id) = uuid::Uuid::parse_str(project_id) {
         if let Ok(mut store) = store_lock.lock() {
-            store.add_project_heading(&project_id, name);
+            store.add_project_heading(&project_id, name, index);
         } else {
             panic!("Failed to read the store! 😱");
         }

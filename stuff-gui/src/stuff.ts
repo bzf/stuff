@@ -57,8 +57,12 @@ export async function createProject(name: string) {
   await invoke("create_project", { name });
 }
 
-export async function addProjectHeading(projectId: string, name: string) {
-  await invoke("add_project_heading", { projectId, name });
+export async function addProjectHeading(
+  projectId: string,
+  name: string,
+  index: number
+) {
+  await invoke("add_project_heading", { projectId, name, index });
 }
 
 export async function markTaskAsComplete(taskId: string) {

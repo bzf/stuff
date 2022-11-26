@@ -101,11 +101,14 @@ impl State {
                 uuid,
                 project_id,
                 name,
+                index,
             } => {
-                self.project_headings.insert(
+                let (internal_index, _) = self.project_headings.insert_full(
                     *uuid,
                     ProjectHeading::new(*uuid, *project_id, name.clone(), event_payload.timestamp),
                 );
+
+                self.project_headings.move_index(internal_index, *index);
             }
         }
     }

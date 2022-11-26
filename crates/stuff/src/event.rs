@@ -38,5 +38,6 @@ pub enum Event {
         uuid: Uuid,
         project_id: Uuid,
         name: String,
+        index: usize,
     },
 }

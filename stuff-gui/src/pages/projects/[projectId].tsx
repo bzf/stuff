@@ -40,9 +40,9 @@ export default function Project() {
         </div>
 
         <div className="flex flex-col gap-6">
-          <NewProjectHeading projectId={project.id} />
+          <NewProjectHeading projectId={project.id} index={0} />
 
-          {headings.map((heading) => (
+          {headings.map((heading, index) => (
             <div className="flex flex-col gap-4" key={heading.id}>
               <ProjectHeading
                 key={heading.id}
@@ -54,6 +54,7 @@ export default function Project() {
 
               <NewProjectHeading
                 key={`${heading.id}/heading`}
+                index={index + 1}
                 projectId={project.id}
               />
             </div>
@@ -95,14 +96,14 @@ function ProjectHeading({ heading, tasks }) {
   );
 }
 
-function NewProjectHeading({ projectId }) {
+function NewProjectHeading({ projectId, index }) {
   const [showForm, setShowForm] = useState(false);
   const [headingTitle, setHeadingTitle] = useState("");
 
   function handleCreate() {
     if (headingTitle === "") return;
 
-    addProjectHeading(projectId, headingTitle);
+    addProjectHeading(projectId, headingTitle, index);
     handleCancel();
   }
 
