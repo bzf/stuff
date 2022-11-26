@@ -23,6 +23,7 @@ impl Client {
 
     pub fn initialize(&self) {
         let data_directory = self.xdg_dirs.get_data_home();
+        std::fs::create_dir_all(&data_directory).expect("Failed to create data directory");
         let initial_configuration = Config::new(data_directory.as_path());
         let filepath = self
             .xdg_dirs
