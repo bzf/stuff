@@ -13,6 +13,7 @@ pub enum Event {
     AddTask {
         uuid: Uuid,
         title: String,
+        description: Option<String>,
         project_id: Option<uuid::Uuid>,
     },
     MarkTaskAsComplete {

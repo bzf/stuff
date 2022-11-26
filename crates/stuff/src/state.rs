@@ -46,6 +46,7 @@ impl State {
             Event::AddTask {
                 uuid,
                 title,
+                description,
                 project_id,
             } => {
                 self.tasks.insert(
@@ -53,7 +54,7 @@ impl State {
                     Task::new(
                         uuid.clone(),
                         title.clone(),
-                        String::new(),
+                        description.clone().unwrap_or(String::new()),
                         event_payload.timestamp,
                         *project_id,
                     ),

@@ -44,8 +44,12 @@ export function useTasks() {
   return tasks;
 }
 
-export async function addTask(title: string, projectId?: string) {
-  await invoke("add_task", { title, projectId });
+export async function addTask(
+  title: string,
+  description?: string,
+  projectId?: string
+) {
+  await invoke("add_task", { title, description, projectId });
 }
 
 export async function createProject(name: string) {

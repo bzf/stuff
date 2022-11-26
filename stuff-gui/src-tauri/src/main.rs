@@ -35,10 +35,16 @@ fn project_headings(store_lock: tauri::State<StoreSync>) -> Vec<stuff::ProjectHe
 }
 
 #[tauri::command]
-fn add_task(title: &str, project_id: Option<&str>, store_lock: tauri::State<StoreSync>) {
+fn add_task(
+    title: &str,
+    description: Option<String>,
+    project_id: Option<&str>,
+    store_lock: tauri::State<StoreSync>,
+) {
     if let Ok(mut store) = store_lock.lock() {
         store.add_task(
             title,
+            description,
             project_id.and_then(|pid| uuid::Uuid::parse_str(pid).ok()),
         )
     } else {
