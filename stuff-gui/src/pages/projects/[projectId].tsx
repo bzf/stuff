@@ -25,22 +25,35 @@ export default function Project() {
   return (
     <>
       <div>
-        <div className="flex flex-col pb-4 px-3">
-          <PageTitle title={project.name} />
+        <div className="pb-2">
+          <div className="flex flex-col pb-4 px-3">
+            <PageTitle title={project.name} />
 
-          {visibleTasks.map((task) => (
-            <TaskItem task={task} key={task.id} />
-          ))}
+            {visibleTasks.map((task) => (
+              <TaskItem task={task} key={task.id} />
+            ))}
+          </div>
+
+          <NewTaskForm projectId={project.id} />
         </div>
 
-        <NewTaskForm projectId={project.id} />
-
         <div className="flex flex-col gap-6 px-3">
-          {headings.map((heading) => (
-            <ProjectHeading key={heading.id} heading={heading} tasks={tasks} />
-          ))}
-
           <NewProjectHeading projectId={project.id} />
+
+          {headings.map((heading) => (
+            <div className="flex flex-col gap-4" key={heading.id}>
+              <ProjectHeading
+                key={heading.id}
+                heading={heading}
+                tasks={tasks}
+              />
+
+              <NewProjectHeading
+                key={`${heading.id}/heading`}
+                projectId={project.id}
+              />
+            </div>
+          ))}
         </div>
       </div>
     </>
@@ -54,7 +67,7 @@ function ProjectHeading({ heading, tasks }) {
 
   return (
     <div>
-      <div className="flex items-end pb-2 mb-2 border-b gap-3 pt-8">
+      <div className="flex items-end pb-2 mb-2 border-b gap-3">
         <h2 className="text-xl font-semibold tracking-tight text-gray-700">
           {heading.name}
         </h2>
@@ -85,7 +98,7 @@ function NewProjectHeading({ projectId }) {
 
   if (showForm) {
     return (
-      <div className="flex justify-between bg-blue-100">
+      <div className="flex justify-between">
         <InlineNewTaskForm
           title={headingTitle}
           setTitle={setHeadingTitle}
@@ -97,7 +110,17 @@ function NewProjectHeading({ projectId }) {
       </div>
     );
   } else {
-    return <button onClick={() => setShowForm(true)}>Add heading...</button>;
+    return (
+      <div className="opacity-0 hover:opacity-100 transition flex items-center justify-center">
+        <div className="flex-1 h-px bg-gray-200" />
+
+        <button className="px-4 font-medium" onClick={() => setShowForm(true)}>
+          Add heading...
+        </button>
+
+        <div className="flex-1 h-px bg-gray-200" />
+      </div>
+    );
   }
 }
 
