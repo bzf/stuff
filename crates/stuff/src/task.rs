@@ -6,6 +6,7 @@ use serde::Serialize;
 pub struct Task {
     id: uuid::Uuid,
     title: String,
+    description: String,
     created_at: DateTime<Utc>,
 
     completed_at: Option<DateTime<Utc>>,
@@ -16,12 +17,14 @@ impl Task {
     pub fn new(
         id: uuid::Uuid,
         title: String,
+        description: String,
         created_at: DateTime<Utc>,
         project_id: Option<uuid::Uuid>,
     ) -> Self {
         Self {
             id,
             title,
+            description,
             created_at,
             project_id,
 
@@ -35,6 +38,10 @@ impl Task {
 
     pub fn title(&self) -> &str {
         &self.title
+    }
+
+    pub fn description(&self) -> &str {
+        &self.description
     }
 
     pub fn completed_at(&self) -> &Option<DateTime<Utc>> {

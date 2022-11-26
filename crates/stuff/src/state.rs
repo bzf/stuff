@@ -53,6 +53,7 @@ impl State {
                     Task::new(
                         uuid.clone(),
                         title.clone(),
+                        String::new(),
                         event_payload.timestamp,
                         *project_id,
                     ),
