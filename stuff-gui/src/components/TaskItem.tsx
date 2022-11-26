@@ -15,8 +15,6 @@ export default function TaskItem({ task }) {
     }
   }
 
-  console.log(task);
-
   return (
     <div className="py-1 flex gap-3 justify-start items-start">
       <span>

@@ -16,8 +16,6 @@ export default function Project() {
   const headings = useProjectHeadings(projectId);
   const tasks = useTasks();
 
-  console.log({ project, headings });
-
   if (tasks === undefined || project === undefined) {
     return <div>loading</div>;
   }
