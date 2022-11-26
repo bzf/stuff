@@ -39,6 +39,7 @@ fn add_task(
     title: &str,
     description: Option<String>,
     project_id: Option<&str>,
+    project_heading_id: Option<&str>,
     store_lock: tauri::State<StoreSync>,
 ) {
     if let Ok(mut store) = store_lock.lock() {
@@ -46,6 +47,7 @@ fn add_task(
             title,
             description,
             project_id.and_then(|pid| uuid::Uuid::parse_str(pid).ok()),
+            project_heading_id.and_then(|pid| uuid::Uuid::parse_str(pid).ok()),
         )
     } else {
         panic!("Failed to read the store! 😱");

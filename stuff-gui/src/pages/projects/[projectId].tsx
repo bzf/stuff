@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import { useState } from "react";
+import _ from "lodash";
 import NewTaskForm from "../../components/NewTaskForm";
 import PageTitle from "../../components/PageTitle";
 import TaskItem from "../../components/TaskItem";
@@ -15,12 +16,11 @@ export default function Project() {
   const project = useProject(projectId);
   const headings = useProjectHeadings(projectId);
   const tasks = useTasks();
+  const projectTasks = tasks.filter((task) => task.projectId === projectId);
 
   if (tasks === undefined || project === undefined) {
     return <div>loading</div>;
   }
-
-  const visibleTasks = tasks.filter((task) => task.projectId === project.id);
 
   return (
     <>
@@ -29,15 +29,17 @@ export default function Project() {
           <div className="flex flex-col pb-4 px-3">
             <PageTitle title={project.name} />
 
-            {visibleTasks.map((task) => (
-              <TaskItem task={task} key={task.id} />
-            ))}
+            {projectTasks
+              .filter((t) => _.isEmpty(t.projectHeadingId))
+              .map((task) => (
+                <TaskItem task={task} key={task.id} />
+              ))}
           </div>
 
           <NewTaskForm projectId={project.id} />
         </div>
 
-        <div className="flex flex-col gap-6 px-3">
+        <div className="flex flex-col gap-6">
           <NewProjectHeading projectId={project.id} />
 
           {headings.map((heading) => (
@@ -45,7 +47,9 @@ export default function Project() {
               <ProjectHeading
                 key={heading.id}
                 heading={heading}
-                tasks={tasks}
+                tasks={projectTasks.filter(
+                  (t) => t.projectHeadingId === heading.id
+                )}
               />
 
               <NewProjectHeading
@@ -67,7 +71,7 @@ function ProjectHeading({ heading, tasks }) {
 
   return (
     <div>
-      <div className="flex items-end pb-2 mb-2 border-b gap-3">
+      <div className="flex items-end pb-2 mb-2 border-b gap-3 px-3">
         <h2 className="text-xl font-semibold tracking-tight text-gray-700">
           {heading.name}
         </h2>
@@ -76,6 +80,17 @@ function ProjectHeading({ heading, tasks }) {
           {headingTasks.length}
         </span>
       </div>
+
+      <div className="px-3 pb-2">
+        {tasks.map((task) => (
+          <TaskItem task={task} key={task.id} />
+        ))}
+      </div>
+
+      <NewTaskForm
+        projectId={heading.projectId}
+        projectHeadingId={heading.id}
+      />
     </div>
   );
 }

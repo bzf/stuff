@@ -2,7 +2,15 @@ import { useState } from "react";
 import _ from "lodash";
 import { addTask } from "../stuff";
 
-export default function NewTaskForm({ projectId }) {
+interface NewTaskFormArgs {
+  projectId?: string;
+  projectHeadingId?: string;
+}
+
+export default function NewTaskForm({
+  projectId,
+  projectHeadingId,
+}: NewTaskFormArgs) {
   const [title, setTitle] = useState("");
   const [notes, setNotes] = useState("");
 
@@ -11,7 +19,7 @@ export default function NewTaskForm({ projectId }) {
   function handleAdd() {
     if (title === "") return;
 
-    addTask(title, presence(notes), projectId);
+    addTask(title, presence(notes), projectId, projectHeadingId);
     clearInput();
   }
 
