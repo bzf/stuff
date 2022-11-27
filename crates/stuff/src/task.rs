@@ -12,6 +12,7 @@ pub struct Task {
     completed_at: Option<DateTime<Utc>>,
     project_id: Option<uuid::Uuid>,
     project_heading_id: Option<uuid::Uuid>,
+    area_id: Option<uuid::Uuid>,
 }
 
 impl Task {
@@ -22,6 +23,7 @@ impl Task {
         created_at: DateTime<Utc>,
         project_id: Option<uuid::Uuid>,
         project_heading_id: Option<uuid::Uuid>,
+        area_id: Option<uuid::Uuid>,
     ) -> Self {
         Self {
             id,
@@ -30,6 +32,7 @@ impl Task {
             created_at,
             project_id,
             project_heading_id,
+            area_id,
 
             completed_at: None,
         }

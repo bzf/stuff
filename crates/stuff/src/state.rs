@@ -55,6 +55,7 @@ impl State {
                 description,
                 project_id,
                 project_heading_id,
+                area_id,
             } => {
                 self.tasks.insert(
                     uuid.clone(),
@@ -65,6 +66,7 @@ impl State {
                         event_payload.timestamp,
                         *project_id,
                         *project_heading_id,
+                        *area_id,
                     ),
                 );
             }

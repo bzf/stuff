@@ -88,6 +88,7 @@ impl Store {
         description: Option<String>,
         project_id: Option<uuid::Uuid>,
         project_heading_id: Option<uuid::Uuid>,
+        area_id: Option<uuid::Uuid>,
     ) {
         self.push_event(Event::AddTask {
             uuid: uuid::Uuid::new_v4(),
@@ -95,6 +96,7 @@ impl Store {
             description,
             project_id,
             project_heading_id,
+            area_id,
         })
     }
 

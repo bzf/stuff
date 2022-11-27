@@ -5,11 +5,13 @@ import { addTask } from "../stuff";
 interface NewTaskFormArgs {
   projectId?: string;
   projectHeadingId?: string;
+  areaId?: string;
 }
 
 export default function NewTaskForm({
   projectId,
   projectHeadingId,
+  areaId,
 }: NewTaskFormArgs) {
   const [title, setTitle] = useState("");
   const [notes, setNotes] = useState("");
@@ -19,7 +21,7 @@ export default function NewTaskForm({
   function handleAdd() {
     if (title === "") return;
 
-    addTask(title, presence(notes), projectId, projectHeadingId);
+    addTask(title, presence(notes), projectId, projectHeadingId, areaId);
     clearInput();
   }
 

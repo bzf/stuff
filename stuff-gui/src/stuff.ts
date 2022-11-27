@@ -71,9 +71,16 @@ export async function addTask(
   title: string,
   description?: string,
   projectId?: string,
-  projectHeadingId?: string
+  projectHeadingId?: string,
+  areaId?: string
 ) {
-  await invoke("add_task", { title, description, projectId, projectHeadingId });
+  await invoke("add_task", {
+    title,
+    description,
+    projectId,
+    projectHeadingId,
+    areaId,
+  });
 }
 
 export async function createProject(name: string): Option<IProject> {
