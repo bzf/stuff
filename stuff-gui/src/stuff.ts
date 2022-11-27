@@ -7,31 +7,44 @@ export interface IProject {
   name: string;
 }
 
+export interface IArea {
+  id: string;
+  name: string;
+}
+
 export function useProject(projectId: string) {
   const projects = useProjects();
   return projects.find((project) => project.id === projectId);
+}
+
+export function useArea(areaId: string) {
+  const areas = useAreas();
+  return areas.find((area) => area.id === areaId);
 }
 
 function useStuffState() {
   const [tasks, setTasks] = useState([]);
   const [projects, setProjects] = useState([]);
   const [projectHeadings, setProjectHeadings] = useState([]);
+  const [areas, setAreas] = useState([]);
 
   useEffect(() => {
     listen("next-stuff-state", () => {
       invoke("tasks").then(setTasks);
       invoke("projects").then(setProjects);
       invoke("project_headings").then(setProjectHeadings);
+      invoke("areas").then(setAreas);
     });
-  }, [setTasks, setProjects]);
+  }, [setTasks, setProjects, setProjectHeadings, setAreas]);
 
   useEffect(() => {
     invoke("tasks").then(setTasks);
     invoke("projects").then(setProjects);
     invoke("project_headings").then(setProjectHeadings);
+    invoke("areas").then(setAreas);
   }, []);
 
-  return { tasks, projects, projectHeadings };
+  return { tasks, projects, projectHeadings, areas };
 }
 
 export function useProjects(): IProject[] {
@@ -44,9 +57,14 @@ export function useProjectHeadings(projectId: string) {
   return projectHeadings.filter((heading) => heading.projectId === projectId);
 }
 
-export function useTasks() {
+export function useTasks(): IArea[] {
   const { tasks } = useStuffState();
   return tasks;
+}
+
+export function useAreas() {
+  const { areas } = useStuffState();
+  return areas;
 }
 
 export async function addTask(
@@ -84,4 +102,8 @@ export async function moveTaskToInbox(taskId: string) {
 
 export async function moveTaskToProject(taskId: string, projectId: string) {
   await invoke("move_task_to_project", { taskId, projectId });
+}
+
+export async function createArea(name: string): Option<IArea> {
+  return await invoke("create_area", { name });
 }

@@ -143,6 +143,17 @@ impl Store {
         })
     }
 
+    pub fn create_area(&mut self, name: &str) -> Option<&crate::Area> {
+        let uuid = uuid::Uuid::new_v4();
+
+        self.push_event(Event::CreateArea {
+            uuid,
+            name: name.to_string(),
+        });
+
+        self.state.areas.get(&uuid).clone()
+    }
+
     fn push_event(&mut self, event: Event) {
         let event_payload = EventPayload {
             event,

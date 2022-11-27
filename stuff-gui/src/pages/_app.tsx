@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { AppProps } from "next/app";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useProjects } from "../stuff";
+import { useAreas, useProjects } from "../stuff";
 
 import "../style.css";
 import { faHeart } from "@fortawesome/free-regular-svg-icons";
@@ -10,11 +10,12 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   const projects = useProjects();
+  const areas = useAreas();
 
   return (
     <div className="flex h-screen w-screen overflow-hidden">
       <div className="bg-gray-50 min-w-[255px] h-full py-4 px-2 flex justify-between flex-col">
-        <div className="flex flex-col justify-between gap-6">
+        <div className="flex flex-col justify-between gap-6 flex-1 overflow-y-auto">
           <section className="w-full flex flex-col gap-2">
             <AppLink icon={faHeart} href="/inbox">
               Inbox
@@ -35,11 +36,23 @@ export default function MyApp({ Component, pageProps }: AppProps) {
               </AppLink>
             ))}
           </section>
+
+          {areas.map((area) => (
+            <section key={area.id} className="w-full flex flex-col gap-2">
+              <AppLink key={area.id} icon={faHeart} href={`/areas/${area.id}`}>
+                {area.name}
+              </AppLink>
+            </section>
+          ))}
         </div>
 
-        <div>
+        <div className="flex flex-col text-sm">
           <AppLink icon={faPlus} href={`/projects/new`}>
             New project
+          </AppLink>
+
+          <AppLink icon={faPlus} href={`/areas/new`}>
+            New area
           </AppLink>
         </div>
       </div>

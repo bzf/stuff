@@ -40,4 +40,8 @@ pub enum Event {
         name: String,
         index: usize,
     },
+    CreateArea {
+        uuid: Uuid,
+        name: String,
+    },
 }

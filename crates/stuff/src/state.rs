@@ -1,13 +1,14 @@
 use serde::Serialize;
 
 use crate::event::{Event, EventPayload};
-use crate::{Project, ProjectHeading, Task};
+use crate::{Area, Project, ProjectHeading, Task};
 
 #[derive(Serialize, Clone)]
 pub struct State {
     tasks: indexmap::map::IndexMap<uuid::Uuid, Task>,
     pub projects: indexmap::map::IndexMap<uuid::Uuid, Project>,
     project_headings: indexmap::map::IndexMap<uuid::Uuid, ProjectHeading>,
+    pub areas: indexmap::map::IndexMap<uuid::Uuid, Area>,
 }
 
 impl State {
@@ -16,6 +17,7 @@ impl State {
             tasks: indexmap::map::IndexMap::new(),
             projects: indexmap::map::IndexMap::new(),
             project_headings: indexmap::map::IndexMap::new(),
+            areas: indexmap::map::IndexMap::new(),
         }
     }
 
@@ -29,6 +31,10 @@ impl State {
 
     pub fn project_headings(&self) -> Vec<ProjectHeading> {
         self.project_headings.values().cloned().collect()
+    }
+
+    pub fn areas(&self) -> Vec<Area> {
+        self.areas.values().cloned().collect()
     }
 
     pub fn from_events(event_payloads: Vec<&EventPayload>) -> Self {
@@ -109,6 +115,11 @@ impl State {
                 );
 
                 self.project_headings.move_index(internal_index, *index);
+            }
+
+            Event::CreateArea { uuid, name } => {
+                self.areas
+                    .insert(uuid.clone(), Area::new(*uuid, name.clone()));
             }
         }
     }

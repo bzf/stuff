@@ -35,6 +35,15 @@ fn project_headings(store_lock: tauri::State<StoreSync>) -> Vec<stuff::ProjectHe
 }
 
 #[tauri::command]
+fn areas(store_lock: tauri::State<StoreSync>) -> Vec<stuff::Area> {
+    if let Ok(store) = store_lock.lock() {
+        store.state().areas()
+    } else {
+        panic!("Failed to read the store! 😱");
+    }
+}
+
+#[tauri::command]
 fn add_task(
     title: &str,
     description: Option<String>,
@@ -126,6 +135,15 @@ fn add_project_heading(
     }
 }
 
+#[tauri::command]
+fn create_area(name: &str, store_lock: tauri::State<StoreSync>) -> Option<stuff::Area> {
+    if let Ok(mut store) = store_lock.lock() {
+        store.create_area(name).map(|p| p.clone())
+    } else {
+        unreachable!("Failed to read the store! 😱");
+    }
+}
+
 fn main() {
     use tauri::Manager;
 
@@ -156,6 +174,7 @@ fn main() {
             tasks,
             projects,
             project_headings,
+            areas,
             add_task,
             mark_task_as_complete,
             mark_task_as_incomplete,
@@ -163,6 +182,7 @@ fn main() {
             move_task_to_project,
             create_project,
             add_project_heading,
+            create_area,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
