@@ -10,7 +10,7 @@ function App() {
     return <div>loading</div>;
   }
 
-  const visibleTasks = tasks.filter((task) => !task.projectId);
+  const visibleTasks = tasks.filter((task) => !task.projectId && !task.areaId);
 
   return (
     <>
