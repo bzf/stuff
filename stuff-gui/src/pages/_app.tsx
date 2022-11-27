@@ -15,17 +15,20 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   return (
     <div className="flex h-screen w-screen overflow-hidden">
       <div className="bg-gray-50 min-w-[255px] h-full py-4 px-2 flex justify-between flex-col">
-        <div className="flex flex-col justify-between gap-6 flex-1 overflow-y-auto">
-          <section className="w-full flex flex-col gap-2">
+        <div className="flex flex-col justify-between gap-3 flex-1 overflow-y-auto pb-8">
+          <section className="w-full flex flex-col gap-1">
             <AppLink icon={faHeart} href="/inbox">
               Inbox
             </AppLink>
+          </section>
+
+          <section className="w-full flex flex-col gap-1">
             <AppLink icon={faHeart} href="/today">
               Today
             </AppLink>
           </section>
 
-          <section className="w-full flex flex-col gap-2">
+          <section className="w-full flex flex-col gap-1">
             {projects.map((project) => (
               <AppLink
                 key={project.id}
@@ -38,7 +41,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
           </section>
 
           {areas.map((area) => (
-            <section key={area.id} className="w-full flex flex-col gap-2">
+            <section key={area.id} className="w-full flex flex-col gap-1">
               <AppLink key={area.id} icon={faHeart} href={`/areas/${area.id}`}>
                 {area.name}
               </AppLink>
@@ -71,10 +74,11 @@ function AppLink({ icon, href, children }) {
   const classes = [
     "w-full",
     "block",
-    "rounded-lg",
-    "h-8",
+    "rounded-md",
+    "h-6",
     "flex items-center px-3",
     "font-medium",
+    "text-sm",
     "flex",
     "items-center",
     "gap-2",
