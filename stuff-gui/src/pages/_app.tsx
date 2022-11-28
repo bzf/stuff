@@ -15,7 +15,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   return (
     <div className="flex h-screen w-screen overflow-hidden">
       <div className="bg-gray-50 min-w-[255px] h-full py-4 px-2 flex justify-between flex-col">
-        <div className="flex flex-col justify-between gap-3 flex-1 overflow-y-auto pb-8">
+        <div className="flex flex-col gap-3 flex-1 overflow-y-auto pb-8">
           <section className="w-full flex flex-col gap-1">
             <AppLink icon={faHeart} href="/inbox">
               Inbox
