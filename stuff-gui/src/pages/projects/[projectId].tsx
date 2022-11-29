@@ -10,6 +10,8 @@ import {
   useProjectHeadings,
   useTasks,
 } from "../../stuff";
+import useEditTask from "../../hooks/useEditTask";
+import TaskForm from "../../components/TaskForm";
 
 export default function Project() {
   const { projectId } = useRouter().query;
@@ -17,6 +19,7 @@ export default function Project() {
   const headings = useProjectHeadings(projectId);
   const tasks = useTasks();
   const projectTasks = tasks.filter((task) => task.projectId === projectId);
+  const { save, cancel, editTask, setEditTask } = useEditTask();
 
   if (tasks === undefined || project === undefined) {
     return <div>loading</div>;
@@ -31,9 +34,23 @@ export default function Project() {
 
             {projectTasks
               .filter((t) => _.isEmpty(t.projectHeadingId))
-              .map((task) => (
-                <TaskItem task={task} key={task.id} />
-              ))}
+              .map((task) =>
+                task.id === editTask?.id ? (
+                  <TaskForm
+                    key={task.id}
+                    initialNote={editTask.description}
+                    initialTitle={editTask.title}
+                    onUpdate={save}
+                    onCancel={cancel}
+                  />
+                ) : (
+                  <TaskItem
+                    task={task}
+                    key={task.id}
+                    onDoubleClick={() => setEditTask(task)}
+                  />
+                )
+              )}
           </div>
 
           <NewTaskForm projectId={project.id} />
@@ -46,6 +63,10 @@ export default function Project() {
             <div className="flex flex-col gap-4" key={heading.id}>
               <ProjectHeading
                 key={heading.id}
+                save={save}
+                cancel={cancel}
+                setEditTask={setEditTask}
+                editTask={editTask}
                 heading={heading}
                 tasks={projectTasks.filter(
                   (t) => t.projectHeadingId === heading.id
@@ -65,7 +86,14 @@ export default function Project() {
   );
 }
 
-function ProjectHeading({ heading, tasks }) {
+function ProjectHeading({
+  heading,
+  tasks,
+  editTask,
+  setEditTask,
+  save,
+  cancel,
+}) {
   const headingTasks = tasks.filter(
     (task) => task.projectHeadingId === heading.id
   );
@@ -83,9 +111,23 @@ function ProjectHeading({ heading, tasks }) {
       </div>
 
       <div className="px-3 pb-2">
-        {tasks.map((task) => (
-          <TaskItem task={task} key={task.id} />
-        ))}
+        {tasks.map((task) =>
+          task.id === editTask?.id ? (
+            <TaskForm
+              key={task.id}
+              initialNote={editTask.description}
+              initialTitle={editTask.title}
+              onUpdate={save}
+              onCancel={cancel}
+            />
+          ) : (
+            <TaskItem
+              task={task}
+              key={task.id}
+              onDoubleClick={() => setEditTask(task)}
+            />
+          )
+        )}
       </div>
 
       <NewTaskForm
