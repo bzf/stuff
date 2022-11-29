@@ -1,35 +1,19 @@
-import { updateTaskDescription, updateTaskTitle, useTasks } from "../stuff";
+import { useTasks } from "../stuff";
 import PageTitle from "../components/PageTitle";
 import NewTaskForm from "../components/NewTaskForm";
 import TaskItem from "../components/TaskItem";
-import { useState } from "react";
 import TaskForm from "../components/TaskForm";
+import useEditTask from "../hooks/useEditTask";
 
 function App() {
   const tasks = useTasks();
-  const [editingTaskId, setEditingTaskId] = useState(null);
+  const { save, cancel, editTask, setEditTask } = useEditTask();
 
   if (tasks === undefined) {
     return <div>loading</div>;
   }
 
   const visibleTasks = tasks.filter((task) => !task.projectId && !task.areaId);
-
-  async function handleUpdate(title: string, description: string) {
-    const editingTask = tasks.find((task) => task.id === editingTaskId);
-    const promises = [];
-
-    if (title !== editingTask.title) {
-      promises.push(updateTaskTitle(editingTaskId, title));
-    }
-
-    if (description !== editingTask.description) {
-      promises.push(updateTaskDescription(editingTaskId, description));
-    }
-
-    await Promise.allSettled(promises);
-    setEditingTaskId(null);
-  }
 
   return (
     <>
@@ -38,19 +22,19 @@ function App() {
           <PageTitle title="Inbox" />
 
           {visibleTasks.map((task) =>
-            task.id === editingTaskId ? (
+            task.id === editTask?.id ? (
               <TaskForm
                 key={task.id}
-                initialNote={task.description}
-                initialTitle={task.title}
-                onUpdate={handleUpdate}
-                onCancel={() => setEditingTaskId(null)}
+                initialNote={editTask.description}
+                initialTitle={editTask.title}
+                onUpdate={save}
+                onCancel={cancel}
               />
             ) : (
               <TaskItem
                 task={task}
                 key={task.id}
-                onDoubleClick={() => setEditingTaskId(task.id)}
+                onDoubleClick={() => setEditTask(task)}
               />
             )
           )}
