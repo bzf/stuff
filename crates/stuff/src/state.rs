@@ -71,6 +71,21 @@ impl State {
                 );
             }
 
+            Event::UpdateTaskTitle { task_id, title } => {
+                self.tasks
+                    .entry(*task_id)
+                    .and_modify(|task| task.title = title.to_string());
+            }
+
+            Event::UpdateTaskDescription {
+                task_id,
+                description,
+            } => {
+                self.tasks.entry(*task_id).and_modify(|task| {
+                    task.description = description.clone().unwrap_or(String::new())
+                });
+            }
+
             Event::MarkTaskAsComplete { task_id } => {
                 self.tasks
                     .entry(*task_id)

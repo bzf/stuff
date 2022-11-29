@@ -66,6 +66,35 @@ fn add_task(
 }
 
 #[tauri::command]
+fn update_task_title(task_id: &str, title: &str, store_lock: tauri::State<StoreSync>) {
+    if let Ok(task_id) = uuid::Uuid::parse_str(task_id) {
+        if let Ok(mut store) = store_lock.lock() {
+            store.update_task_title(&task_id, title)
+        } else {
+            panic!("Failed to read the store! 😱");
+        }
+    }
+}
+
+#[tauri::command]
+fn update_task_description(task_id: &str, description: &str, store_lock: tauri::State<StoreSync>) {
+    if let Ok(task_id) = uuid::Uuid::parse_str(task_id) {
+        if let Ok(mut store) = store_lock.lock() {
+            store.update_task_description(
+                &task_id,
+                if description.is_empty() {
+                    None
+                } else {
+                    Some(description.to_string())
+                },
+            );
+        } else {
+            panic!("Failed to read the store! 😱");
+        }
+    }
+}
+
+#[tauri::command]
 fn mark_task_as_complete(task_id: &str, store_lock: tauri::State<StoreSync>) {
     if let Ok(task_id) = uuid::Uuid::parse_str(task_id) {
         if let Ok(mut store) = store_lock.lock() {
@@ -178,6 +207,8 @@ fn main() {
             project_headings,
             areas,
             add_task,
+            update_task_title,
+            update_task_description,
             mark_task_as_complete,
             mark_task_as_incomplete,
             move_task_to_inbox,

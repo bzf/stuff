@@ -5,8 +5,8 @@ use serde::Serialize;
 #[serde(rename_all = "camelCase")]
 pub struct Task {
     id: uuid::Uuid,
-    title: String,
-    description: String,
+    pub title: String,
+    pub description: String,
     created_at: DateTime<Utc>,
 
     completed_at: Option<DateTime<Utc>>,

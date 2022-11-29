@@ -2,6 +2,16 @@ import { useEffect, useState } from "react";
 import { listen } from "@tauri-apps/api/event";
 import { invoke } from "@tauri-apps/api/tauri";
 
+export interface ITask {
+  id: string;
+  title: string;
+  description: string;
+
+  projectId?: string;
+  areaId?: string;
+  projectHeadingId?: string;
+}
+
 export interface IProject {
   id: string;
   name: string;
@@ -57,7 +67,7 @@ export function useProjectHeadings(projectId: string) {
   return projectHeadings.filter((heading) => heading.projectId === projectId);
 }
 
-export function useTasks(): IArea[] {
+export function useTasks(): ITask[] {
   const { tasks } = useStuffState();
   return tasks;
 }
@@ -83,7 +93,18 @@ export async function addTask(
   });
 }
 
-export async function createProject(name: string): Option<IProject> {
+export async function updateTaskTitle(taskId: string, title: string) {
+  await invoke("update_task_title", { taskId, title });
+}
+
+export async function updateTaskDescription(
+  taskId: string,
+  description: string
+) {
+  await invoke("update_task_description", { taskId, description });
+}
+
+export async function createProject(name: string): Promise<IProject | null> {
   return await invoke("create_project", { name });
 }
 
@@ -111,6 +132,6 @@ export async function moveTaskToProject(taskId: string, projectId: string) {
   await invoke("move_task_to_project", { taskId, projectId });
 }
 
-export async function createArea(name: string): Option<IArea> {
+export async function createArea(name: string): Promise<IArea | undefined> {
   return await invoke("create_area", { name });
 }

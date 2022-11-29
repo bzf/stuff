@@ -4,7 +4,7 @@ import { faNoteSticky } from "@fortawesome/free-regular-svg-icons";
 import { markTaskAsComplete, markTaskAsIncomplete } from "../stuff";
 import { useState } from "react";
 
-export default function TaskItem({ task }) {
+export default function TaskItem({ task, ...rest }) {
   const [showNotes, setShowNotes] = useState(false);
 
   function handleToggle() {
@@ -16,7 +16,7 @@ export default function TaskItem({ task }) {
   }
 
   return (
-    <div className="py-1 flex gap-3 justify-start items-start">
+    <div {...rest} className="py-1 flex gap-3 justify-start items-start">
       <span>
         <input
           type="checkbox"

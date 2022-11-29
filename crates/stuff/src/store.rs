@@ -100,6 +100,20 @@ impl Store {
         })
     }
 
+    pub fn update_task_title(&mut self, task_id: &uuid::Uuid, title: &str) {
+        self.push_event(Event::UpdateTaskTitle {
+            task_id: task_id.clone(),
+            title: title.to_string(),
+        });
+    }
+
+    pub fn update_task_description(&mut self, task_id: &uuid::Uuid, description: Option<String>) {
+        self.push_event(Event::UpdateTaskDescription {
+            task_id: task_id.clone(),
+            description,
+        });
+    }
+
     pub fn mark_task_as_complete(&mut self, task_id: &uuid::Uuid) {
         self.push_event(Event::MarkTaskAsComplete {
             task_id: task_id.clone(),
