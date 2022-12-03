@@ -77,6 +77,12 @@ impl State {
                 );
             }
 
+            Event::MoveTaskToPosition { task_id, position } => {
+                if let Some(current_position) = self.tasks.get_index_of(task_id) {
+                    self.tasks.move_index(current_position, *position);
+                }
+            }
+
             Event::UpdateTaskTitle { task_id, title } => {
                 self.tasks
                     .entry(*task_id)

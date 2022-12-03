@@ -66,6 +66,17 @@ fn add_task(
 }
 
 #[tauri::command]
+fn move_task_to_position(task_id: &str, position: usize, store_lock: tauri::State<StoreSync>) {
+    if let Ok(task_id) = uuid::Uuid::parse_str(task_id) {
+        if let Ok(mut store) = store_lock.lock() {
+            store.move_task_to_position(&task_id, position)
+        } else {
+            panic!("Failed to read the store! 😱");
+        }
+    }
+}
+
+#[tauri::command]
 fn update_task_title(task_id: &str, title: &str, store_lock: tauri::State<StoreSync>) {
     if let Ok(task_id) = uuid::Uuid::parse_str(task_id) {
         if let Ok(mut store) = store_lock.lock() {
@@ -207,6 +218,7 @@ fn main() {
             project_headings,
             areas,
             add_task,
+            move_task_to_position,
             update_task_title,
             update_task_description,
             mark_task_as_complete,

@@ -16,7 +16,11 @@ export default function TaskItem({ task, ...rest }) {
   }
 
   return (
-    <div {...rest} className="py-1 flex gap-3 justify-start items-start">
+    <div
+      {...rest}
+      data-task-id={task.id}
+      className="py-1 flex gap-3 justify-start items-start cursor-default select-none"
+    >
       <span>
         <input
           type="checkbox"

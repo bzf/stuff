@@ -93,6 +93,10 @@ export async function addTask(
   });
 }
 
+export async function moveTaskToPosition(taskId: string, position: number) {
+  await invoke("move_task_to_position", { taskId, position });
+}
+
 export async function updateTaskTitle(taskId: string, title: string) {
   await invoke("update_task_title", { taskId, title });
 }

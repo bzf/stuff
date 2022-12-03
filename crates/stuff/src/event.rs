@@ -18,6 +18,10 @@ pub enum Event {
         project_heading_id: Option<uuid::Uuid>,
         area_id: Option<uuid::Uuid>,
     },
+    MoveTaskToPosition {
+        task_id: Uuid,
+        position: usize,
+    },
     UpdateTaskTitle {
         task_id: Uuid,
         title: String,

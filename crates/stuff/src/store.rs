@@ -100,6 +100,13 @@ impl Store {
         })
     }
 
+    pub fn move_task_to_position(&mut self, task_id: &uuid::Uuid, position: usize) {
+        self.push_event(Event::MoveTaskToPosition {
+            task_id: task_id.clone(),
+            position,
+        });
+    }
+
     pub fn update_task_title(&mut self, task_id: &uuid::Uuid, title: &str) {
         self.push_event(Event::UpdateTaskTitle {
             task_id: task_id.clone(),
