@@ -153,6 +153,35 @@ fn move_task_to_project(task_id: &str, project_id: &str, store_lock: tauri::Stat
 }
 
 #[tauri::command]
+fn move_task_to_project_heading(
+    task_id: &str,
+    project_heading_id: &str,
+    store_lock: tauri::State<StoreSync>,
+) {
+    if let (Ok(task_id), Ok(project_heading_id)) = (
+        uuid::Uuid::parse_str(task_id),
+        uuid::Uuid::parse_str(project_heading_id),
+    ) {
+        if let Ok(mut store) = store_lock.lock() {
+            store.move_task_to_project_heading(&task_id, &project_heading_id);
+        } else {
+            panic!("Failed to read the store! 😱");
+        }
+    }
+}
+
+#[tauri::command]
+fn clear_task_project_heading(task_id: &str, store_lock: tauri::State<StoreSync>) {
+    if let Ok(task_id) = uuid::Uuid::parse_str(task_id) {
+        if let Ok(mut store) = store_lock.lock() {
+            store.clear_task_project_heading(&task_id);
+        } else {
+            panic!("Failed to read the store! 😱");
+        }
+    }
+}
+
+#[tauri::command]
 fn create_project(name: &str, store_lock: tauri::State<StoreSync>) -> Option<stuff::Project> {
     if let Ok(mut store) = store_lock.lock() {
         store.create_project(name).map(|p| p.clone())
@@ -227,6 +256,8 @@ fn main() {
             move_task_to_project,
             create_project,
             add_project_heading,
+            move_task_to_project_heading,
+            clear_task_project_heading,
             create_area,
         ])
         .run(tauri::generate_context!())

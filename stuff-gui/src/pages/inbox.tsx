@@ -31,7 +31,6 @@ function App() {
 
           <ReactSortable
             group="groupName"
-            className="bg-blue-100"
             animation={200}
             delay={2}
             list={visibleTasks}

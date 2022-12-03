@@ -10,9 +10,9 @@ pub struct Task {
     created_at: DateTime<Utc>,
 
     completed_at: Option<DateTime<Utc>>,
-    project_id: Option<uuid::Uuid>,
-    project_heading_id: Option<uuid::Uuid>,
-    area_id: Option<uuid::Uuid>,
+    pub project_id: Option<uuid::Uuid>,
+    pub project_heading_id: Option<uuid::Uuid>,
+    pub area_id: Option<uuid::Uuid>,
 }
 
 impl Task {

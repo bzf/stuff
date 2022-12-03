@@ -7,7 +7,9 @@ import PageTitle from "../../components/PageTitle";
 import TaskItem from "../../components/TaskItem";
 import {
   addProjectHeading,
+  clearTaskProjectHeading,
   moveTaskToPosition,
+  moveTaskToProjectHeading,
   useProject,
   useProjectHeadings,
   useTasks,
@@ -25,13 +27,6 @@ export default function Project() {
 
   if (tasks === undefined || project === undefined) {
     return <div>loading</div>;
-  }
-
-  function handleTaskMove(event) {
-    const { newIndex, item } = event;
-    const { taskId } = item.dataset;
-
-    moveTaskToPosition(taskId, newIndex);
   }
 
   return (
@@ -129,23 +124,33 @@ function ProjectHeading({
       </div>
 
       <div className="px-3 pb-2">
-        {tasks.map((task) =>
-          task.id === editTask?.id ? (
-            <TaskForm
-              key={task.id}
-              initialNote={editTask.description}
-              initialTitle={editTask.title}
-              onUpdate={save}
-              onCancel={cancel}
-            />
-          ) : (
-            <TaskItem
-              task={task}
-              key={task.id}
-              onDoubleClick={() => setEditTask(task)}
-            />
-          )
-        )}
+        <ReactSortable
+          group="groupName"
+          animation={200}
+          delay={2}
+          list={tasks}
+          setList={() => null}
+          onEnd={handleTaskMove}
+          id={heading.id}
+        >
+          {tasks.map((task) =>
+            task.id === editTask?.id ? (
+              <TaskForm
+                key={task.id}
+                initialNote={editTask.description}
+                initialTitle={editTask.title}
+                onUpdate={save}
+                onCancel={cancel}
+              />
+            ) : (
+              <TaskItem
+                task={task}
+                key={task.id}
+                onDoubleClick={() => setEditTask(task)}
+              />
+            )
+          )}
+        </ReactSortable>
       </div>
 
       <NewTaskForm
@@ -240,4 +245,20 @@ function InlineNewTaskForm({
       </div>
     </div>
   );
+}
+
+function handleTaskMove(event) {
+  const { newIndex, item, to } = event;
+  const headingId = _.isEmpty(to.id) ? undefined : to.id;
+  const { taskId, headingId: taskHeadingId } = item.dataset;
+
+  moveTaskToPosition(taskId, newIndex);
+
+  if (headingId !== taskHeadingId) {
+    if (_.isEmpty(headingId)) {
+      clearTaskProjectHeading(taskId);
+    } else {
+      moveTaskToProjectHeading(taskId, headingId);
+    }
+  }
 }

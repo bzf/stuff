@@ -136,6 +136,17 @@ export async function moveTaskToProject(taskId: string, projectId: string) {
   await invoke("move_task_to_project", { taskId, projectId });
 }
 
+export async function moveTaskToProjectHeading(
+  taskId: string,
+  projectHeadingId: string
+) {
+  await invoke("move_task_to_project_heading", { taskId, projectHeadingId });
+}
+
+export async function clearTaskProjectHeading(taskId: string) {
+  await invoke("clear_task_project_heading", { taskId });
+}
+
 export async function createArea(name: string): Promise<IArea | undefined> {
   return await invoke("create_area", { name });
 }

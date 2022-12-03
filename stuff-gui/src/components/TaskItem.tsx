@@ -19,6 +19,7 @@ export default function TaskItem({ task, ...rest }) {
     <div
       {...rest}
       data-task-id={task.id}
+      data-heading-id={task.projectHeadingId}
       className="py-1 flex gap-3 justify-start items-start cursor-default select-none"
     >
       <span>

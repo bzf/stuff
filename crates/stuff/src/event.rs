@@ -53,6 +53,13 @@ pub enum Event {
         name: String,
         index: usize,
     },
+    MoveTaskToProjectHeading {
+        task_id: Uuid,
+        project_heading_id: Uuid,
+    },
+    ClearTaskProjectHeading {
+        task_id: Uuid,
+    },
     CreateArea {
         uuid: Uuid,
         name: String,

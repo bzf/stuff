@@ -165,6 +165,22 @@ impl Store {
             index,
         })
     }
+    pub fn move_task_to_project_heading(
+        &mut self,
+        task_id: &uuid::Uuid,
+        project_heading_id: &uuid::Uuid,
+    ) {
+        self.push_event(Event::MoveTaskToProjectHeading {
+            task_id: task_id.clone(),
+            project_heading_id: project_heading_id.clone(),
+        })
+    }
+
+    pub fn clear_task_project_heading(&mut self, task_id: &uuid::Uuid) {
+        self.push_event(Event::ClearTaskProjectHeading {
+            task_id: task_id.clone(),
+        })
+    }
 
     pub fn create_area(&mut self, name: &str) -> Option<&crate::Area> {
         let uuid = uuid::Uuid::new_v4();

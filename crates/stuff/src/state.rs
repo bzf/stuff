@@ -146,6 +146,21 @@ impl State {
                 self.project_headings.move_index(internal_index, *index);
             }
 
+            Event::MoveTaskToProjectHeading {
+                task_id,
+                project_heading_id,
+            } => {
+                self.tasks
+                    .entry(*task_id)
+                    .and_modify(|task| task.project_heading_id = Some(*project_heading_id));
+            }
+
+            Event::ClearTaskProjectHeading { task_id } => {
+                self.tasks
+                    .entry(*task_id)
+                    .and_modify(|task| task.project_heading_id = None);
+            }
+
             Event::CreateArea { uuid, name } => {
                 self.areas
                     .insert(uuid.clone(), Area::new(*uuid, name.clone()));
