@@ -5,10 +5,16 @@ use crate::{Area, Project, ProjectHeading, Task};
 
 #[derive(Serialize, Clone)]
 pub struct State {
+    #[serde(with = "indexmap::serde_seq")]
     tasks: indexmap::map::IndexMap<uuid::Uuid, Task>,
+
+    #[serde(with = "indexmap::serde_seq")]
     pub projects: indexmap::map::IndexMap<uuid::Uuid, Project>,
-    project_headings: indexmap::map::IndexMap<uuid::Uuid, ProjectHeading>,
+
+    #[serde(with = "indexmap::serde_seq")]
     pub areas: indexmap::map::IndexMap<uuid::Uuid, Area>,
+
+    project_headings: indexmap::map::IndexMap<uuid::Uuid, ProjectHeading>,
 }
 
 impl State {
