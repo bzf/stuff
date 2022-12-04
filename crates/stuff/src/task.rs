@@ -13,6 +13,8 @@ pub struct Task {
     pub project_id: Option<uuid::Uuid>,
     pub project_heading_id: Option<uuid::Uuid>,
     pub area_id: Option<uuid::Uuid>,
+
+    pub defer_date: Option<chrono::NaiveDate>,
 }
 
 impl Task {
@@ -35,6 +37,7 @@ impl Task {
             area_id,
 
             completed_at: None,
+            defer_date: None,
         }
     }
 

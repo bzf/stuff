@@ -125,6 +125,15 @@ impl State {
                     .and_modify(|task| task.set_project_id(Some(*project_id)));
             }
 
+            Event::UpdateTaskDeferDate {
+                task_id,
+                defer_date,
+            } => {
+                self.tasks
+                    .entry(*task_id)
+                    .and_modify(|task| task.defer_date = *defer_date);
+            }
+
             Event::CreateProject {
                 uuid,
                 name,

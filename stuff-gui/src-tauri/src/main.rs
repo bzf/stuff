@@ -139,6 +139,24 @@ fn move_task_to_inbox(task_id: &str, store_lock: tauri::State<StoreSync>) {
 }
 
 #[tauri::command]
+fn update_task_defer_date(
+    task_id: &str,
+    defer_date: Option<&str>,
+    store_lock: tauri::State<StoreSync>,
+) {
+    if let Ok(task_id) = uuid::Uuid::parse_str(task_id) {
+        if let Ok(mut store) = store_lock.lock() {
+            store.update_task_defer_date(
+                &task_id,
+                defer_date.and_then(|t| chrono::NaiveDate::parse_from_str(t, "%Y-%m-%d").ok()),
+            );
+        } else {
+            panic!("Failed to read the store! 😱");
+        }
+    }
+}
+
+#[tauri::command]
 fn move_task_to_project(task_id: &str, project_id: &str, store_lock: tauri::State<StoreSync>) {
     if let (Ok(task_id), Ok(project_id)) = (
         uuid::Uuid::parse_str(task_id),
@@ -314,6 +332,7 @@ fn main() {
             mark_task_as_complete,
             mark_task_as_incomplete,
             move_task_to_inbox,
+            update_task_defer_date,
             move_task_to_project,
             create_project,
             rename_project,

@@ -43,6 +43,10 @@ pub enum Event {
     MoveTaskToInbox {
         task_id: Uuid,
     },
+    UpdateTaskDeferDate {
+        task_id: Uuid,
+        defer_date: Option<chrono::NaiveDate>,
+    },
     CreateProject {
         uuid: Uuid,
         name: String,

@@ -146,6 +146,17 @@ impl Store {
         })
     }
 
+    pub fn update_task_defer_date(
+        &mut self,
+        task_id: &uuid::Uuid,
+        defer_date: Option<chrono::NaiveDate>,
+    ) {
+        self.push_event(Event::UpdateTaskDeferDate {
+            task_id: *task_id,
+            defer_date,
+        })
+    }
+
     pub fn create_project(
         &mut self,
         name: &str,

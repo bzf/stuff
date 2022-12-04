@@ -19,6 +19,7 @@ serde = { version = "1.0", features = ["derive"] }
 tauri = {version = "1.2", features = ["api-all"] }
 stuff = { path = "../../crates/stuff" }
 uuid = { version = "1.2.2", features = ["v4", "serde"] }
+chrono = { version = "0.4.23", features = ["serde"] }
 
 [features]
 # by default Tauri runs in production mode

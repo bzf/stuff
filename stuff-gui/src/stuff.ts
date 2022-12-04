@@ -10,6 +10,8 @@ export interface ITask {
   projectId?: string;
   areaId?: string;
   projectHeadingId?: string;
+
+  deferDate?: Date;
 }
 
 export interface IProject {
@@ -149,6 +151,10 @@ export async function markTaskAsIncomplete(taskId: string) {
 
 export async function moveTaskToInbox(taskId: string) {
   await invoke("move_task_to_inbox", { taskId });
+}
+
+export async function updateTaskDeferDate(taskId: string, deferDate?: string) {
+  await invoke("update_task_defer_date", { taskId, deferDate });
 }
 
 export async function moveTaskToProject(taskId: string, projectId: string) {

@@ -63,6 +63,7 @@ export default function Area() {
                     key={task.id}
                     initialNote={editTask.description}
                     initialTitle={editTask.title}
+                    initialDeferDate={editTask.deferDate}
                     onUpdate={save}
                     onCancel={cancel}
                   />

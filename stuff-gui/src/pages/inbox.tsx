@@ -43,6 +43,7 @@ function App() {
                   key={task.id}
                   initialNote={editTask.description}
                   initialTitle={editTask.title}
+                  initialDeferDate={editTask.deferDate}
                   onUpdate={save}
                   onCancel={cancel}
                 />

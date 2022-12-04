@@ -1,20 +1,28 @@
 import { useState } from "react";
+import dayjs from "dayjs";
 
 interface TaskFormArgs {
   initialTitle: string;
   initialNote: string;
-  onUpdate: (title: string, description: string) => void;
+  initialDeferDate?: Date;
+  onUpdate: (title: string, description: string, deferDate?: string) => void;
   onCancel: () => void;
 }
 
 export default function TaskForm({
   initialTitle,
   initialNote,
+  initialDeferDate,
   onUpdate,
   onCancel,
 }: TaskFormArgs) {
   const [title, setTitle] = useState(initialTitle);
   const [notes, setNotes] = useState(initialNote);
+  const [deferDate, setDeferDate] = useState(
+    initialDeferDate && dayjs(initialDeferDate).format("YYYY-MM-DD")
+  );
+
+  const save = () => onUpdate(title, notes, deferDate);
 
   return (
     <div className="flex flex-col gap-2">
@@ -25,7 +33,7 @@ export default function TaskForm({
           <InlineNewTaskForm
             title={title}
             setTitle={setTitle}
-            onSubmit={() => onUpdate(title, notes)}
+            onSubmit={save}
             onCancel={onCancel}
           />
 
@@ -36,11 +44,21 @@ export default function TaskForm({
             value={notes}
           />
         </div>
+
+        <div>
+          <label>
+            <input
+              value={deferDate}
+              type="date"
+              onChange={(event) => setDeferDate(event.target.value)}
+            />
+          </label>
+        </div>
       </div>
 
       <div className="flex justify-end items-center gap-4">
         <button onClick={onCancel}>Cancel</button>
-        <button onClick={() => onUpdate(title, notes)}>Update</button>
+        <button onClick={save}>Update</button>
       </div>
     </div>
   );
