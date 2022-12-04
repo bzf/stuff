@@ -156,6 +156,15 @@ impl State {
                 }
             }
 
+            Event::MoveProjectToArea {
+                project_id,
+                area_id,
+            } => {
+                self.projects
+                    .entry(*project_id)
+                    .and_modify(|project| project.area_id = *area_id);
+            }
+
             Event::AddProjectHeading {
                 uuid,
                 project_id,

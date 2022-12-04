@@ -176,6 +176,13 @@ impl Store {
         });
     }
 
+    pub fn move_project_to_area(&mut self, project_id: &uuid::Uuid, area_id: Option<uuid::Uuid>) {
+        self.push_event(Event::MoveProjectToArea {
+            project_id: *project_id,
+            area_id,
+        });
+    }
+
     pub fn add_project_heading(&mut self, project_id: &uuid::Uuid, name: &str, index: usize) {
         self.push_event(Event::AddProjectHeading {
             uuid: uuid::Uuid::new_v4(),

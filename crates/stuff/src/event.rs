@@ -56,6 +56,10 @@ pub enum Event {
         project_id: Uuid,
         position: usize,
     },
+    MoveProjectToArea {
+        project_id: Uuid,
+        area_id: Option<Uuid>,
+    },
     AddProjectHeading {
         uuid: Uuid,
         project_id: Uuid,

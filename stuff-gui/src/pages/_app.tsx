@@ -2,7 +2,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { AppProps } from "next/app";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { moveProjectToPosition, useAreas, useProjects } from "../stuff";
+import {
+  moveProjectToArea,
+  moveProjectToPosition,
+  useAreas,
+  useProjects,
+} from "../stuff";
 import { isEmpty } from "lodash";
 
 import "../style.css";
@@ -15,10 +20,15 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   const areas = useAreas();
 
   function handleTaskMove(event) {
-    const { newIndex, item } = event;
-    const { projectId } = item.dataset;
+    const { newIndex, item, to } = event;
+    const { id: targetAreaId } = to;
+    const { projectId, areaId } = item.dataset;
 
     moveProjectToPosition(projectId, newIndex);
+
+    if (areaId !== targetAreaId) {
+      moveProjectToArea(projectId, targetAreaId);
+    }
   }
 
   return (
@@ -68,19 +78,30 @@ export default function MyApp({ Component, pageProps }: AppProps) {
                 {area.name}
               </AppLink>
 
-              {projects
-                .filter((p) => p.areaId === area.id)
-                .map((project) => (
-                  <AppLink
-                    projectId={project.id}
-                    key={project.id}
-                    icon={faHeart}
-                    href={`/projects/${project.id}`}
-                    empty={isEmpty(project.name)}
-                  >
-                    {project.name || "New project"}
-                  </AppLink>
-                ))}
+              <ReactSortable
+                group="projects"
+                animation={200}
+                id={area.id}
+                delay={2}
+                list={projects.filter((p) => p.areaId == area.id)}
+                setList={() => null}
+                onEnd={handleTaskMove}
+              >
+                {projects
+                  .filter((p) => p.areaId === area.id)
+                  .map((project) => (
+                    <AppLink
+                      projectId={project.id}
+                      areaId={area.id}
+                      key={project.id}
+                      icon={faHeart}
+                      href={`/projects/${project.id}`}
+                      empty={isEmpty(project.name)}
+                    >
+                      {project.name || "New project"}
+                    </AppLink>
+                  ))}
+              </ReactSortable>
             </section>
           ))}
         </div>
@@ -105,7 +126,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   );
 }
 
-function AppLink({ icon, href, children, empty, projectId }) {
+function AppLink({ icon, href, children, empty, projectId, areaId }) {
   const router = useRouter();
   const classes = [
     "w-full",
@@ -130,7 +151,11 @@ function AppLink({ icon, href, children, empty, projectId }) {
 
   return (
     <Link href={href} legacyBehavior>
-      <a className={classes.join(" ")} data-project-id={projectId}>
+      <a
+        className={classes.join(" ")}
+        data-project-id={projectId}
+        data-area-id={areaId}
+      >
         <FontAwesomeIcon fixedWidth size="xs" icon={icon} />
         {children}
       </a>

@@ -15,6 +15,7 @@ export interface ITask {
 export interface IProject {
   id: string;
   name: string;
+  areaId?: string;
 }
 
 export interface IArea {
@@ -124,6 +125,10 @@ export async function moveProjectToPosition(
   position: number
 ) {
   await invoke("move_project_to_position", { projectId, position });
+}
+
+export async function moveProjectToArea(projectId: string, areaId?: string) {
+  await invoke("move_project_to_area", { projectId, areaId });
 }
 
 export async function addProjectHeading(

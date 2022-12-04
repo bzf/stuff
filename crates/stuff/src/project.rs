@@ -32,7 +32,7 @@ pub struct Project {
     id: uuid::Uuid,
     pub name: String,
     created_at: DateTime<Utc>,
-    area_id: Option<uuid::Uuid>,
+    pub area_id: Option<uuid::Uuid>,
 }
 
 impl Project {
