@@ -8,6 +8,7 @@ import {
   useProjects,
   useArea,
   useTasks,
+  renameArea,
 } from "../../stuff";
 import TaskForm from "../../components/TaskForm";
 import useEditTask from "../../hooks/useEditTask";
@@ -41,7 +42,12 @@ export default function Area() {
       <div>
         <div className="pb-2">
           <div className="flex flex-col pb-4 px-3">
-            <PageTitle title={area.name} />
+            <input
+              value={area.name}
+              onChange={(event) => renameArea(areaId, event.target.value)}
+              placeholder="New area"
+              className="text-4xl font-bold tracking-tight text-gray-900 pt-8 pb-4"
+            />
 
             <ReactSortable
               group="groupName"
@@ -93,7 +99,7 @@ export default function Area() {
       <Link href={`/projects/new?areaId=${areaId}`} legacyBehavior>
         <a className="text-gray-700">
           <FontAwesomeIcon fixedWidth size="xs" icon={faPlus} />
-          New project in <i>{area.name}</i>
+          New project in <i>{area.name || "New area"}</i>
         </a>
       </Link>
     </div>

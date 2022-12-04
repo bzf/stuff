@@ -3,7 +3,7 @@ use serde::Serialize;
 #[derive(Serialize, Debug, Clone)]
 pub struct Area {
     id: uuid::Uuid,
-    name: String,
+    pub name: String,
 }
 
 impl Area {

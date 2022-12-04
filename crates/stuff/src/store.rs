@@ -219,6 +219,13 @@ impl Store {
         self.state.areas.get(&uuid).clone()
     }
 
+    pub fn rename_area(&mut self, area_id: &uuid::Uuid, name: &str) {
+        self.push_event(Event::RenameArea {
+            area_id: *area_id,
+            name: name.to_string(),
+        });
+    }
+
     fn push_event(&mut self, event: Event) {
         let event_payload = EventPayload {
             event,

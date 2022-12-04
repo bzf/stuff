@@ -265,6 +265,17 @@ fn create_area(name: &str, store_lock: tauri::State<StoreSync>) -> Option<stuff:
     }
 }
 
+#[tauri::command]
+fn rename_area(area_id: &str, name: &str, store_lock: tauri::State<StoreSync>) {
+    if let Ok(area_id) = uuid::Uuid::parse_str(area_id) {
+        if let Ok(mut store) = store_lock.lock() {
+            store.rename_area(&area_id, name);
+        } else {
+            unreachable!("Failed to read the store! 😱");
+        }
+    }
+}
+
 fn main() {
     use tauri::Manager;
 
@@ -312,6 +323,7 @@ fn main() {
             move_task_to_project_heading,
             clear_task_project_heading,
             create_area,
+            rename_area,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

@@ -74,8 +74,13 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 
           {areas.map((area) => (
             <section key={area.id} className="w-full flex flex-col">
-              <AppLink key={area.id} icon={faBox} href={`/areas/${area.id}`}>
-                {area.name}
+              <AppLink
+                key={area.id}
+                empty={isEmpty(area.name)}
+                icon={faBox}
+                href={`/areas/${area.id}`}
+              >
+                {area.name || "New area"}
               </AppLink>
 
               <ReactSortable

@@ -77,4 +77,8 @@ pub enum Event {
         uuid: Uuid,
         name: String,
     },
+    RenameArea {
+        area_id: Uuid,
+        name: String,
+    },
 }

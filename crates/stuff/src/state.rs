@@ -198,6 +198,12 @@ impl State {
                 self.areas
                     .insert(uuid.clone(), Area::new(*uuid, name.clone()));
             }
+
+            Event::RenameArea { area_id, name } => {
+                self.areas
+                    .entry(*area_id)
+                    .and_modify(|area| area.name = name.clone());
+            }
         }
     }
 }

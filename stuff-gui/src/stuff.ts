@@ -169,3 +169,10 @@ export async function clearTaskProjectHeading(taskId: string) {
 export async function createArea(name: string): Promise<IArea | undefined> {
   return await invoke("create_area", { name });
 }
+
+export async function renameArea(
+  areaId: string,
+  name: string
+): Promise<IArea | undefined> {
+  return await invoke("rename_area", { areaId, name });
+}
