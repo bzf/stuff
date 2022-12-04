@@ -6,7 +6,7 @@ import { moveProjectToPosition, useAreas, useProjects } from "../stuff";
 
 import "../style.css";
 import { faHeart } from "@fortawesome/free-regular-svg-icons";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faBox, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { ReactSortable } from "react-sortablejs";
 
 export default function MyApp({ Component, pageProps }: AppProps) {
@@ -61,7 +61,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 
           {areas.map((area) => (
             <section key={area.id} className="w-full flex flex-col gap-1">
-              <AppLink key={area.id} icon={faHeart} href={`/areas/${area.id}`}>
+              <AppLink key={area.id} icon={faBox} href={`/areas/${area.id}`}>
                 {area.name}
               </AppLink>
             </section>
