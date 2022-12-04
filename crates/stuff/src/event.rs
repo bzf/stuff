@@ -46,6 +46,7 @@ pub enum Event {
     CreateProject {
         uuid: Uuid,
         name: String,
+        area_id: Option<uuid::Uuid>,
     },
     RenameProject {
         project_id: Uuid,

@@ -108,8 +108,11 @@ export async function updateTaskDescription(
   await invoke("update_task_description", { taskId, description });
 }
 
-export async function createProject(name: string): Promise<IProject | null> {
-  return await invoke("create_project", { name });
+export async function createProject(
+  name: string,
+  areaId?: string
+): Promise<IProject | null> {
+  return await invoke("create_project", { name, areaId });
 }
 
 export async function renameProject(projectId: string, name: string) {

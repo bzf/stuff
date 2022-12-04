@@ -125,10 +125,19 @@ impl State {
                     .and_modify(|task| task.set_project_id(Some(*project_id)));
             }
 
-            Event::CreateProject { uuid, name } => {
+            Event::CreateProject {
+                uuid,
+                name,
+                area_id,
+            } => {
                 self.projects.insert(
                     uuid.clone(),
-                    Project::new(uuid.clone(), name.clone(), event_payload.timestamp),
+                    Project::new(
+                        uuid.clone(),
+                        name.clone(),
+                        area_id.clone(),
+                        event_payload.timestamp,
+                    ),
                 );
             }
 

@@ -182,9 +182,15 @@ fn clear_task_project_heading(task_id: &str, store_lock: tauri::State<StoreSync>
 }
 
 #[tauri::command]
-fn create_project(name: &str, store_lock: tauri::State<StoreSync>) -> Option<stuff::Project> {
+fn create_project(
+    name: &str,
+    area_id: Option<&str>,
+    store_lock: tauri::State<StoreSync>,
+) -> Option<stuff::Project> {
     if let Ok(mut store) = store_lock.lock() {
-        store.create_project(name).map(|p| p.clone())
+        store
+            .create_project(name, area_id.and_then(|t| uuid::Uuid::parse_str(t).ok()))
+            .map(|p| p.clone())
     } else {
         unreachable!("Failed to read the store! 😱");
     }

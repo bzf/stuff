@@ -32,14 +32,21 @@ pub struct Project {
     id: uuid::Uuid,
     pub name: String,
     created_at: DateTime<Utc>,
+    area_id: Option<uuid::Uuid>,
 }
 
 impl Project {
-    pub fn new(id: uuid::Uuid, name: String, created_at: DateTime<Utc>) -> Self {
+    pub fn new(
+        id: uuid::Uuid,
+        name: String,
+        area_id: Option<uuid::Uuid>,
+        created_at: DateTime<Utc>,
+    ) -> Self {
         Self {
             id,
             name,
             created_at,
+            area_id,
         }
     }
 

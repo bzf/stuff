@@ -146,12 +146,17 @@ impl Store {
         })
     }
 
-    pub fn create_project(&mut self, name: &str) -> Option<&crate::Project> {
+    pub fn create_project(
+        &mut self,
+        name: &str,
+        area_id: Option<uuid::Uuid>,
+    ) -> Option<&crate::Project> {
         let uuid = uuid::Uuid::new_v4();
 
         self.push_event(Event::CreateProject {
             uuid,
             name: name.to_string(),
+            area_id,
         });
 
         self.state.projects.get(&uuid).clone()
