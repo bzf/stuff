@@ -5,12 +5,13 @@ import { useRouter } from "next/router";
 
 export default function ProjectNewPage() {
   const router = useRouter();
+  const { areaId } = router.query;
   const [title, setTitle] = useState("");
 
   async function handleCreate() {
     if (_.isEmpty(title)) return;
 
-    const project = await createProject(title);
+    const project = await createProject(title, areaId);
     router.replace(`/projects/${project.id}`);
   }
 

@@ -3,6 +3,7 @@ import type { AppProps } from "next/app";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { moveProjectToPosition, useAreas, useProjects } from "../stuff";
+import { isEmpty } from "lodash";
 
 import "../style.css";
 import { faHeart } from "@fortawesome/free-regular-svg-icons";
@@ -41,29 +42,45 @@ export default function MyApp({ Component, pageProps }: AppProps) {
               group="projects"
               animation={200}
               delay={2}
-              list={projects}
+              list={projects.filter((p) => isEmpty(p.areaId))}
               setList={() => null}
               onEnd={handleTaskMove}
             >
-              {projects.map((project) => (
-                <AppLink
-                  projectId={project.id}
-                  key={project.id}
-                  icon={faHeart}
-                  href={`/projects/${project.id}`}
-                  empty={_.isEmpty(project.name)}
-                >
-                  {project.name || "New project"}
-                </AppLink>
-              ))}
+              {projects
+                .filter((p) => isEmpty(p.areaId))
+                .map((project) => (
+                  <AppLink
+                    projectId={project.id}
+                    key={project.id}
+                    icon={faHeart}
+                    href={`/projects/${project.id}`}
+                    empty={_.isEmpty(project.name)}
+                  >
+                    {project.name || "New project"}
+                  </AppLink>
+                ))}
             </ReactSortable>
           </section>
 
           {areas.map((area) => (
-            <section key={area.id} className="w-full flex flex-col gap-1">
+            <section key={area.id} className="w-full flex flex-col">
               <AppLink key={area.id} icon={faBox} href={`/areas/${area.id}`}>
                 {area.name}
               </AppLink>
+
+              {projects
+                .filter((p) => p.areaId === area.id)
+                .map((project) => (
+                  <AppLink
+                    projectId={project.id}
+                    key={project.id}
+                    icon={faHeart}
+                    href={`/projects/${project.id}`}
+                    empty={isEmpty(project.name)}
+                  >
+                    {project.name || "New project"}
+                  </AppLink>
+                ))}
             </section>
           ))}
         </div>
