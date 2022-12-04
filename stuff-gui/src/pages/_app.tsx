@@ -34,8 +34,9 @@ export default function MyApp({ Component, pageProps }: AppProps) {
                 key={project.id}
                 icon={faHeart}
                 href={`/projects/${project.id}`}
+                empty={_.isEmpty(project.name)}
               >
-                {project.name}
+                {project.name || "New project"}
               </AppLink>
             ))}
           </section>
@@ -69,7 +70,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   );
 }
 
-function AppLink({ icon, href, children }) {
+function AppLink({ icon, href, children, empty }) {
   const router = useRouter();
   const classes = [
     "w-full",
@@ -86,6 +87,10 @@ function AppLink({ icon, href, children }) {
 
   if (router.asPath === href) {
     classes.push("bg-black/[6%]");
+  }
+
+  if (empty) {
+    classes.push("text-gray-400");
   }
 
   return (

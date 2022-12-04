@@ -47,6 +47,10 @@ pub enum Event {
         uuid: Uuid,
         name: String,
     },
+    RenameProject {
+        project_id: Uuid,
+        name: String,
+    },
     AddProjectHeading {
         uuid: Uuid,
         project_id: Uuid,

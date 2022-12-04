@@ -132,6 +132,12 @@ impl State {
                 );
             }
 
+            Event::RenameProject { project_id, name } => {
+                self.projects
+                    .entry(*project_id)
+                    .and_modify(|project| project.name = name.clone());
+            }
+
             Event::AddProjectHeading {
                 uuid,
                 project_id,

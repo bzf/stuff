@@ -112,6 +112,10 @@ export async function createProject(name: string): Promise<IProject | null> {
   return await invoke("create_project", { name });
 }
 
+export async function renameProject(projectId: string, name: string) {
+  return await invoke("rename_project", { projectId, name });
+}
+
 export async function addProjectHeading(
   projectId: string,
   name: string,

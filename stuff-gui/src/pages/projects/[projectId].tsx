@@ -3,13 +3,13 @@ import { useState } from "react";
 import { ReactSortable } from "react-sortablejs";
 import _ from "lodash";
 import NewTaskForm from "../../components/NewTaskForm";
-import PageTitle from "../../components/PageTitle";
 import TaskItem from "../../components/TaskItem";
 import {
   addProjectHeading,
   clearTaskProjectHeading,
   moveTaskToPosition,
   moveTaskToProjectHeading,
+  renameProject,
   useProject,
   useProjectHeadings,
   useTasks,
@@ -34,7 +34,12 @@ export default function Project() {
       <div>
         <div className="pb-2">
           <div className="flex flex-col pb-4 px-3">
-            <PageTitle title={project.name} />
+            <input
+              value={project.name}
+              onChange={(event) => renameProject(projectId, event.target.value)}
+              placeholder="New project"
+              className="text-4xl font-bold tracking-tight text-gray-900 pt-8 pb-4"
+            />
 
             <ReactSortable
               group="groupName"

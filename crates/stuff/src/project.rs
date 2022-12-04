@@ -30,7 +30,7 @@ impl ProjectHeading {
 #[serde(rename_all = "camelCase")]
 pub struct Project {
     id: uuid::Uuid,
-    name: String,
+    pub name: String,
     created_at: DateTime<Utc>,
 }
 
