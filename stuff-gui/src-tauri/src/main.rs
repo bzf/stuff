@@ -202,6 +202,21 @@ fn rename_project(project_id: &str, name: &str, store_lock: tauri::State<StoreSy
 }
 
 #[tauri::command]
+fn move_project_to_position(
+    project_id: &str,
+    position: usize,
+    store_lock: tauri::State<StoreSync>,
+) {
+    if let Ok(project_id) = uuid::Uuid::parse_str(project_id) {
+        if let Ok(mut store) = store_lock.lock() {
+            store.move_project_to_position(&project_id, position);
+        } else {
+            unreachable!("Failed to read the store! 😱");
+        }
+    }
+}
+
+#[tauri::command]
 fn add_project_heading(
     project_id: &str,
     name: &str,
@@ -267,6 +282,7 @@ fn main() {
             move_task_to_project,
             create_project,
             rename_project,
+            move_project_to_position,
             add_project_heading,
             move_task_to_project_heading,
             clear_task_project_heading,

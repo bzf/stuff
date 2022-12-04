@@ -164,6 +164,13 @@ impl Store {
         });
     }
 
+    pub fn move_project_to_position(&mut self, project_id: &uuid::Uuid, position: usize) {
+        self.push_event(Event::MoveProjectToPosition {
+            project_id: *project_id,
+            position,
+        });
+    }
+
     pub fn add_project_heading(&mut self, project_id: &uuid::Uuid, name: &str, index: usize) {
         self.push_event(Event::AddProjectHeading {
             uuid: uuid::Uuid::new_v4(),

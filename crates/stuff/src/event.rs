@@ -51,6 +51,10 @@ pub enum Event {
         project_id: Uuid,
         name: String,
     },
+    MoveProjectToPosition {
+        project_id: Uuid,
+        position: usize,
+    },
     AddProjectHeading {
         uuid: Uuid,
         project_id: Uuid,

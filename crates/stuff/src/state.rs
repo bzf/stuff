@@ -138,6 +138,15 @@ impl State {
                     .and_modify(|project| project.name = name.clone());
             }
 
+            Event::MoveProjectToPosition {
+                project_id,
+                position,
+            } => {
+                if let Some(current_position) = self.projects.get_index_of(project_id) {
+                    self.projects.move_index(current_position, *position);
+                }
+            }
+
             Event::AddProjectHeading {
                 uuid,
                 project_id,

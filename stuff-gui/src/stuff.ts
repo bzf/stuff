@@ -116,6 +116,13 @@ export async function renameProject(projectId: string, name: string) {
   return await invoke("rename_project", { projectId, name });
 }
 
+export async function moveProjectToPosition(
+  projectId: string,
+  position: number
+) {
+  await invoke("move_project_to_position", { projectId, position });
+}
+
 export async function addProjectHeading(
   projectId: string,
   name: string,
