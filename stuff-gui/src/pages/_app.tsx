@@ -3,6 +3,7 @@ import type { AppProps } from "next/app";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import {
+  moveAreaToPosition,
   moveProjectToArea,
   moveProjectToPosition,
   useAreas,
@@ -29,6 +30,13 @@ export default function MyApp({ Component, pageProps }: AppProps) {
     if (areaId !== targetAreaId) {
       moveProjectToArea(projectId, targetAreaId);
     }
+  }
+
+  function handleAreaMove(event) {
+    const { newIndex, item } = event;
+    const { areaId } = item.dataset;
+
+    moveAreaToPosition(areaId, newIndex);
   }
 
   return (
@@ -72,43 +80,58 @@ export default function MyApp({ Component, pageProps }: AppProps) {
             </ReactSortable>
           </section>
 
-          {areas.map((area) => (
-            <section key={area.id} className="w-full flex flex-col">
-              <AppLink
+          <ReactSortable
+            className="flex flex-col gap-3"
+            group="areas"
+            animation={200}
+            delay={2}
+            list={areas}
+            setList={() => null}
+            onEnd={handleAreaMove}
+          >
+            {areas.map((area) => (
+              <section
                 key={area.id}
-                empty={isEmpty(area.name)}
-                icon={faBox}
-                href={`/areas/${area.id}`}
+                data-area-id={area.id}
+                className="w-full flex flex-col"
               >
-                {area.name || "New area"}
-              </AppLink>
+                <AppLink
+                  key={area.id}
+                  areaId={area.id}
+                  empty={isEmpty(area.name)}
+                  icon={faBox}
+                  href={`/areas/${area.id}`}
+                >
+                  {area.name || "New area"}
+                </AppLink>
 
-              <ReactSortable
-                group="projects"
-                animation={200}
-                id={area.id}
-                delay={2}
-                list={projects.filter((p) => p.areaId == area.id)}
-                setList={() => null}
-                onEnd={handleTaskMove}
-              >
-                {projects
-                  .filter((p) => p.areaId === area.id)
-                  .map((project) => (
-                    <AppLink
-                      projectId={project.id}
-                      areaId={area.id}
-                      key={project.id}
-                      icon={faHeart}
-                      href={`/projects/${project.id}`}
-                      empty={isEmpty(project.name)}
-                    >
-                      {project.name || "New project"}
-                    </AppLink>
-                  ))}
-              </ReactSortable>
-            </section>
-          ))}
+                <ReactSortable
+                  group="projects"
+                  animation={200}
+                  id={area.id}
+                  delay={2}
+                  list={projects.filter((p) => p.areaId == area.id)}
+                  setList={() => null}
+                  onEnd={handleTaskMove}
+                >
+                  {projects
+                    .filter((p) => p.areaId === area.id)
+                    .map((project) => (
+                      <AppLink
+                        projectId={project.id}
+                        areaId={area.id}
+                        key={project.id}
+                        icon={faHeart}
+                        href={`/projects/${project.id}`}
+                        empty={isEmpty(project.name)}
+                      >
+                        {project.name || "New project"}
+                      </AppLink>
+                    ))}
+                </ReactSortable>
+              </section>
+            ))}
+          </ReactSortable>
         </div>
 
         <div className="flex flex-col text-sm">

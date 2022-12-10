@@ -237,6 +237,13 @@ impl Store {
         });
     }
 
+    pub fn move_area_to_position(&mut self, area_id: &uuid::Uuid, position: usize) {
+        self.push_event(Event::MoveAreaToPosition {
+            area_id: *area_id,
+            position,
+        })
+    }
+
     fn push_event(&mut self, event: Event) {
         let event_payload = EventPayload {
             event,

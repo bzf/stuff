@@ -85,4 +85,8 @@ pub enum Event {
         area_id: Uuid,
         name: String,
     },
+    MoveAreaToPosition {
+        area_id: Uuid,
+        position: usize,
+    },
 }

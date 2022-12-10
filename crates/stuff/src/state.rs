@@ -213,6 +213,12 @@ impl State {
                     .entry(*area_id)
                     .and_modify(|area| area.name = name.clone());
             }
+
+            Event::MoveAreaToPosition { area_id, position } => {
+                if let Some(current_position) = self.areas.get_index_of(area_id) {
+                    self.areas.move_index(current_position, *position);
+                }
+            }
         }
     }
 }

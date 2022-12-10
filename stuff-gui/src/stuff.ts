@@ -177,6 +177,10 @@ export async function createArea(name: string): Promise<IArea | undefined> {
   return await invoke("create_area", { name });
 }
 
+export async function moveAreaToPosition(areaId: string, position: number) {
+  return await invoke("move_area_to_position", { areaId, position });
+}
+
 export async function renameArea(
   areaId: string,
   name: string
