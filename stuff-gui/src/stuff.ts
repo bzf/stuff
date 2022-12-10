@@ -6,6 +6,7 @@ export interface ITask {
   id: string;
   title: string;
   description: string;
+  completedAt?: Date;
 
   projectId?: string;
   areaId?: string;

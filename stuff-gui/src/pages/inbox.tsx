@@ -21,7 +21,9 @@ function App() {
     moveTaskToPosition(taskId, newIndex);
   }
 
-  const visibleTasks = tasks.filter((task) => !task.projectId && !task.areaId);
+  const visibleTasks = tasks
+    .filter((task) => !task.projectId && !task.areaId)
+    .filter((task) => !task.completedAt);
 
   return (
     <>
