@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faNoteSticky } from "@fortawesome/free-regular-svg-icons";
 import { markTaskAsComplete, markTaskAsIncomplete } from "../stuff";
 import { useState } from "react";
+import dayjs from "dayjs";
 
 export default function TaskItem({ task, ...rest }) {
   const [showNotes, setShowNotes] = useState(false);
@@ -30,19 +31,23 @@ export default function TaskItem({ task, ...rest }) {
         />
       </span>
 
-      <div className="flex flex-col gap-1">
-        <div className="flex gap-2 items-center">
-          <span className="font-medium text-md text-gray-700">
-            {task.title}
-          </span>
-          {_.isEmpty(task.description) ? null : (
-            <button
-              onClick={() => setShowNotes(!showNotes)}
-              className="text-gray-400 hover:text-gray-500 cursor-default"
-            >
-              <FontAwesomeIcon icon={faNoteSticky} />
-            </button>
-          )}
+      <div className="flex flex-col gap-1 w-full">
+        <div className="flex w-full gap-2 items-center">
+          {task.deferDate ? <DeferDateLabel date={task.deferDate} /> : null}
+
+          <div className="flex items-center gap-2">
+            <span className="font-medium text-md text-gray-700">
+              {task.title}
+            </span>
+            {_.isEmpty(task.description) ? null : (
+              <button
+                onClick={() => setShowNotes(!showNotes)}
+                className="text-gray-400 hover:text-gray-500 cursor-default"
+              >
+                <FontAwesomeIcon icon={faNoteSticky} />
+              </button>
+            )}
+          </div>
         </div>
 
         {showNotes ? (
@@ -50,5 +55,15 @@ export default function TaskItem({ task, ...rest }) {
         ) : null}
       </div>
     </div>
+  );
+}
+
+function DeferDateLabel({ date }) {
+  const dateString = dayjs(date).format("D MMM");
+
+  return (
+    <time className="text-sm bg-gray-200 px-2 rounded-lg font-semibold text-gray-500">
+      {dateString}
+    </time>
   );
 }
