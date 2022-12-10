@@ -20,7 +20,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   const projects = useProjects();
   const areas = useAreas();
 
-  function handleTaskMove(event) {
+  function handleAreaMove(event) {
     const { newIndex, item, to } = event;
     const { id: targetAreaId } = to;
     const { projectId, areaId } = item.dataset;
@@ -62,7 +62,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
               delay={2}
               list={projects.filter((p) => isEmpty(p.areaId))}
               setList={() => null}
-              onEnd={handleTaskMove}
+              onEnd={handleAreaMove}
             >
               {projects
                 .filter((p) => isEmpty(p.areaId))
@@ -112,7 +112,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
                   delay={2}
                   list={projects.filter((p) => p.areaId == area.id)}
                   setList={() => null}
-                  onEnd={handleTaskMove}
+                  onEnd={handleAreaMove}
                 >
                   {projects
                     .filter((p) => p.areaId === area.id)
