@@ -13,7 +13,12 @@ import { isEmpty } from "lodash";
 
 import "../style.css";
 import { faClock, faHeart } from "@fortawesome/free-regular-svg-icons";
-import { faBox, faInbox, faPlus } from "@fortawesome/free-solid-svg-icons";
+import {
+  faBox,
+  faCog,
+  faInbox,
+  faPlus,
+} from "@fortawesome/free-solid-svg-icons";
 import { ReactSortable } from "react-sortablejs";
 
 export default function MyApp({ Component, pageProps }: AppProps) {
@@ -52,6 +57,10 @@ export default function MyApp({ Component, pageProps }: AppProps) {
           <section className="w-full flex flex-col gap-1">
             <AppLink icon={faClock} href="/today">
               Today
+            </AppLink>
+
+            <AppLink icon={faCog} href="/settings">
+              Settings
             </AppLink>
           </section>
 
