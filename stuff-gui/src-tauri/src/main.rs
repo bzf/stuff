@@ -305,6 +305,11 @@ fn move_area_to_position(area_id: &str, position: usize, store_lock: tauri::Stat
     }
 }
 
+#[tauri::command]
+fn read_config(client: tauri::State<stuff::Client>) -> Option<stuff::Config> {
+    client.config()
+}
+
 fn main() {
     use tauri::Manager;
 
@@ -355,6 +360,7 @@ fn main() {
             create_area,
             rename_area,
             move_area_to_position,
+            read_config,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

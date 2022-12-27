@@ -2,6 +2,11 @@ import { useEffect, useState } from "react";
 import { listen } from "@tauri-apps/api/event";
 import { invoke } from "@tauri-apps/api/tauri";
 
+export interface IConfig {
+  clientId: string;
+  dataDirectory: string;
+}
+
 export interface ITask {
   id: string;
   title: string;
@@ -41,6 +46,7 @@ function useStuffState() {
   const [projects, setProjects] = useState([]);
   const [projectHeadings, setProjectHeadings] = useState([]);
   const [areas, setAreas] = useState([]);
+  const [config, setConfig] = useState({});
 
   useEffect(() => {
     listen("next-stuff-state", () => {
@@ -48,6 +54,7 @@ function useStuffState() {
       invoke("projects").then(setProjects);
       invoke("project_headings").then(setProjectHeadings);
       invoke("areas").then(setAreas);
+      invoke("read_config").then(setConfig);
     });
   }, [setTasks, setProjects, setProjectHeadings, setAreas]);
 
@@ -56,9 +63,10 @@ function useStuffState() {
     invoke("projects").then(setProjects);
     invoke("project_headings").then(setProjectHeadings);
     invoke("areas").then(setAreas);
+    invoke("read_config").then(setConfig);
   }, []);
 
-  return { tasks, projects, projectHeadings, areas };
+  return { tasks, projects, projectHeadings, areas, config };
 }
 
 export function useProjects(): IProject[] {
@@ -79,6 +87,11 @@ export function useTasks(): ITask[] {
 export function useAreas(): IArea[] {
   const { areas } = useStuffState();
   return areas;
+}
+
+export function useConfig(): IConfig {
+  const { config } = useStuffState();
+  return config;
 }
 
 export async function addTask(
@@ -186,4 +199,8 @@ export async function renameArea(
   name: string
 ): Promise<IArea | undefined> {
   return await invoke("rename_area", { areaId, name });
+}
+
+export async function readConfig(): Promise<IConfig | undefined> {
+  return await invoke("read_config");
 }

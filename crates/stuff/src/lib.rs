@@ -9,6 +9,7 @@ mod task;
 
 pub use area::Area;
 pub use client::Client;
+pub use config::Config;
 pub use project::{Project, ProjectHeading};
 pub use store::Store;
 pub use task::Task;
