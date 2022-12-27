@@ -76,7 +76,7 @@ export function useTasks(): ITask[] {
   return tasks;
 }
 
-export function useAreas() {
+export function useAreas(): IArea[] {
   const { areas } = useStuffState();
   return areas;
 }
